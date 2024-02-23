@@ -10,6 +10,9 @@ import SwiftUI
 struct MainListView: View {
     let items = ["1",  "2", "3", "4", "5", "5", "5", "5", "5", "5"]
     
+    @State private var presentAddItemView = false
+    @State private var presentCurrentItemView = false
+    @State private var presentSettingsView = false
     @State private var searchText = ""
 
     init(searchText: String = "") {
@@ -24,30 +27,47 @@ struct MainListView: View {
                     .listRowSeparator(.hidden)
                     .frame(height: 60)
                     .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                    .onTapGesture {
+                        presentCurrentItemView.toggle()
+                    }
+                    .fullScreenCover(isPresented: $presentCurrentItemView) {
+                        ItemView(displayType: .current)
+                    }
+                    .listRowBackground(Color.mainGray)
             }
+            .listStyle(PlainListStyle())
             .background(Color.mainGray)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: HStack(content: {
                 NavigationTitleView(title: "Keep!")
             }), trailing: HStack(content: {
                 Button {
-                    print("plus tap")
+                    presentAddItemView.toggle()
                 } label: {
                     Image(systemName: "plus")
                         .foregroundColor(Color(uiColor: UIColor.systemBlue))
                 }
+                .fullScreenCover(isPresented: $presentAddItemView) {
+                    ItemView(displayType: .add)
+                }
                 
                 Button {
-                    print("settings tap")
+                    presentSettingsView.toggle()
                 } label: {
                 Image(systemName: "chevron.right")
                         .foregroundColor(.pink)
+                        .padding(.trailing, -20)
                 }
+                
+                NavigationLink(destination: SettingsView(), isActive: $presentSettingsView) {
+                    EmptyView()
+                }
+                .hidden()
+                
             }))
-            .listStyle(PlainListStyle())
-            
         }
         .searchable(text: $searchText)
+
     }
 }
 

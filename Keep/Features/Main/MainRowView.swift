@@ -35,7 +35,6 @@ struct MainRowView: View {
             .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .listRowBackground(Color.mainGray)
     }
 }
 
