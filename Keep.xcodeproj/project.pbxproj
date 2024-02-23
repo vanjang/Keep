@@ -26,6 +26,7 @@
 		A3CD404A2B890D9900CB3F25 /* ItemDisplayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CD40492B890D9900CB3F25 /* ItemDisplayType.swift */; };
 		A3CD404D2B89110E00CB3F25 /* View_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CD404C2B89110E00CB3F25 /* View_Extension.swift */; };
 		A3CD404F2B89113A00CB3F25 /* ListBackgroundModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CD404E2B89113A00CB3F25 /* ListBackgroundModifier.swift */; };
+		A3CD40512B89168200CB3F25 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = A3CD40502B89168200CB3F25 /* .gitignore */; };
 		A3DA1D0D2B85518C00B821DA /* MainListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DA1D0C2B85518C00B821DA /* MainListView.swift */; };
 		A3DA1D0F2B855ED400B821DA /* NavigationTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DA1D0E2B855ED400B821DA /* NavigationTitleView.swift */; };
 		A3DA1D112B855F8F00B821DA /* MainRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DA1D102B855F8F00B821DA /* MainRowView.swift */; };
@@ -74,6 +75,7 @@
 		A3CD40492B890D9900CB3F25 /* ItemDisplayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDisplayType.swift; sourceTree = "<group>"; };
 		A3CD404C2B89110E00CB3F25 /* View_Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View_Extension.swift; sourceTree = "<group>"; };
 		A3CD404E2B89113A00CB3F25 /* ListBackgroundModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBackgroundModifier.swift; sourceTree = "<group>"; };
+		A3CD40502B89168200CB3F25 /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		A3DA1D0C2B85518C00B821DA /* MainListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainListView.swift; sourceTree = "<group>"; };
 		A3DA1D0E2B855ED400B821DA /* NavigationTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationTitleView.swift; sourceTree = "<group>"; };
 		A3DA1D102B855F8F00B821DA /* MainRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRowView.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 		A337926C2B853A0900CF7FE1 = {
 			isa = PBXGroup;
 			children = (
+				A3CD40502B89168200CB3F25 /* .gitignore */,
 				A33792772B853A0900CF7FE1 /* Keep */,
 				A337928E2B853A2000CF7FE1 /* KeepTests */,
 				A33792982B853A2000CF7FE1 /* KeepUITests */,
@@ -357,6 +360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A33792852B853A1F00CF7FE1 /* LaunchScreen.storyboard in Resources */,
+				A3CD40512B89168200CB3F25 /* .gitignore in Resources */,
 				A33792822B853A1F00CF7FE1 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
