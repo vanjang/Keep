@@ -14,6 +14,8 @@ struct MainListView: View {
     @State private var presentCurrentItemView = false
     @State private var presentSettingsView = false
     @State private var searchText = ""
+    
+    @EnvironmentObject var authManager: AuthManager
 
     init(searchText: String = "") {
         self.searchText = searchText
@@ -42,6 +44,13 @@ struct MainListView: View {
                 NavigationTitleView(title: "Keep!")
             }), trailing: HStack(content: {
                 Button {
+                    authManager.isAuthenticated.toggle()
+                } label: {
+                    Image(systemName: "lock")
+                        .foregroundColor(Color(uiColor: UIColor.systemBlue))
+                }
+                
+                Button {
                     presentAddItemView.toggle()
                 } label: {
                     Image(systemName: "plus")
@@ -54,7 +63,7 @@ struct MainListView: View {
                 Button {
                     presentSettingsView.toggle()
                 } label: {
-                Image(systemName: "chevron.right")
+                    Image(systemName: "chevron.right")
                         .foregroundColor(.pink)
                         .padding(.trailing, -20)
                 }
