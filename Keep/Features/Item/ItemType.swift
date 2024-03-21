@@ -7,6 +7,6 @@
 
 import Foundation
 
-enum ItemType {
-    case password, bankAccount, card, etc
+enum ItemType: String {
+    case password = "Password", bankAccount = "Bank account", card = "Card", etc = "etc."
 }

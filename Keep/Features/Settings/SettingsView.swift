@@ -32,7 +32,7 @@ struct SettingsView: View {
             .navigationBarBackButtonHidden(true)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Password")
+                    Text("Settings")
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
