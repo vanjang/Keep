@@ -8,5 +8,5 @@
 import Foundation
 
 enum ItemDisplayType {
-    case add, current
+    case add, current, edit
 }

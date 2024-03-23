@@ -24,12 +24,17 @@ struct SettingsView: View {
                     Text("Save to iCloud")
                     Text("Remove all")
                 }.listSectionSeparator(.hidden)
+                
+                Section(header: Text("Contact")) {
+                    Text("Ask for Developer")
+                }.listSectionSeparator(.hidden)
 
             }
             .listStyle(PlainListStyle())
             .padding(.top, geometry.safeAreaInsets.top)
             .background(Color.mainGray)
             .navigationBarBackButtonHidden(true)
+            .manualPopBack()
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("Settings")
