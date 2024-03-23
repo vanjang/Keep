@@ -8,7 +8,7 @@
 import Foundation
 
 struct ItemInputItem: Hashable {
-    let placeholder: String
+    let itemSubType: ItemSubType
     let inputType: ItemInputType
     let displayType: ItemDisplayType
 }

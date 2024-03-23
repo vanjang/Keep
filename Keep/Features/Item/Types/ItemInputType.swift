@@ -8,5 +8,5 @@
 import Foundation
 
 enum ItemInputType {
-    case textField, textEditor, cardNumber, date
+    case plain, multiLine, longNumber, date
 }

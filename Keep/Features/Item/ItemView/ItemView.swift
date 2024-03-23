@@ -16,7 +16,7 @@ struct ItemView: View {
     @Environment(\.dismiss) var dismiss
     
     // viewModel
-    @StateObject private var viewModel = ItemAddViewModel()
+    @StateObject private var viewModel = ItemViewModel()
     
     // states
     @State private var presentActionSheet = false
@@ -24,8 +24,9 @@ struct ItemView: View {
     @State private var offset: CGFloat = 0
     @State private var editButtonTap = ""
     @State private var pushToEdit = false
-    @State var selectedInputType: ItemInputType? = nil
-    @State var selectedInputField: String = ""
+    @State private var selectedInputType: ItemInputType? = nil
+    @State private var selectedInputField: String = ""
+    @State private var userInputItem: UserInputItem? = nil
     
     var body: some View {
         NavigationView {
@@ -39,22 +40,17 @@ struct ItemView: View {
         ScrollView {
             VStack(spacing: 24) {
                 ForEach(viewModel.detailItems, id: \.self) { item in
-                    ItemInputView(placeholder: item.placeholder, inputType: item.inputType, displayType: item.displayType, editButtonTap: $editButtonTap)
+                    ItemInputView(itemSubType: item.itemSubType, inputType: item.inputType, displayType: item.displayType, editButtonTap: $editButtonTap, userInputItem: $userInputItem)
                         .frame(minHeight: 50)
                         .onChange(of: editButtonTap) { newValue in
-                            guard newValue == item.placeholder else { return }
+                            guard newValue == item.itemSubType.rawValue else { return }
                             selectedInputType = item.inputType
-                            selectedInputField = item.placeholder
+                            selectedInputField = item.itemSubType.rawValue
                             // to implement onChange(of:) for the same value of editButtonTap, editButtonTap should be emptied everytime it is called.
                             editButtonTap = ""
                             pushToEdit.toggle()
                         }
                 }
-                
-                NavigationLink(destination: ItemEditView(inputType: selectedInputType ?? .textField, inputField: selectedInputField), isActive: $pushToEdit) {
-                    EmptyView()
-                }.hidden()
-                    
                 
                 Button(viewModel.buttonTitle) {
                     dismiss()
@@ -62,6 +58,9 @@ struct ItemView: View {
                 .foregroundColor(Color(uiColor: .systemBlue))
                 .padding()
                 
+                NavigationLink(destination: ItemEditView(inputType: selectedInputType ?? .plain, inputField: selectedInputField, userInputItem: $userInputItem), isActive: $pushToEdit) {
+                    EmptyView()
+                }.hidden()
             }
             .buttonStyle(PlainButtonStyle())
             .padding(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
@@ -74,6 +73,10 @@ struct ItemView: View {
                     }
                 })
         }
+        .onChange(of: userInputItem, perform: { newValue in
+            guard let new = newValue else { return }
+            viewModel.userInputItem.send(new)
+        })
         .onReceive(Publishers.keyboardHeight) { height in
             let isUp = height > 1
             let setUpOffset = {
@@ -129,11 +132,5 @@ struct ItemView: View {
             appeared = true
         }
         
-    }
-}
-
-struct AddItemView_Previews: PreviewProvider {
-    static var previews: some View {
-        ItemView(displayType: .add)
     }
 }
