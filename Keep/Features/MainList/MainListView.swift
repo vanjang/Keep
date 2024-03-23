@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct MainListView: View {
-    let items = ["1",  "2", "3", "4", "5", "5", "5", "5", "5", "5"]
+    // viewModel
+    @StateObject private var viewModel = MainListViewModel()
     
+    // states
+    @State private var selectedItem: MainListItem?
     @State private var presentAddItemView = false
-    @State private var presentCurrentItemView = false
     @State private var presentSettingsView = false
     @State private var searchText = ""
     
+    //
     @EnvironmentObject var authManager: AuthManager
 
     init(searchText: String = "") {
@@ -24,19 +27,19 @@ struct MainListView: View {
     
     var body: some View {
         TransparenNavigationView {
-            List(items, id: \.self) { item in
-                MainRowView(title: item)
+            List(viewModel.items, id: \.self) { item in
+                MainRowView(title: item.title)
                     .listRowSeparator(.hidden)
                     .frame(height: 60)
                     .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
                     .onTapGesture {
-                        presentCurrentItemView.toggle()
-                    }
-                    .fullScreenCover(isPresented: $presentCurrentItemView) {
-                        ItemView(displayType: .current)
+                        selectedItem = item
                     }
                     .listRowBackground(Color.mainGray)
             }
+            .fullScreenCover(item: $selectedItem, content: { item in
+                ItemView(displayType: .current)
+            })
             .listStyle(PlainListStyle())
             .background(Color.mainGray)
             .navigationBarTitleDisplayMode(.inline)
