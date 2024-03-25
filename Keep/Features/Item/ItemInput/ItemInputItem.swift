@@ -11,4 +11,6 @@ struct ItemInputItem: Hashable {
     let itemSubType: ItemSubType
     let inputType: ItemInputType
     let displayType: ItemDisplayType
+    let placeholder: String
+    let isOptional: Bool
 }

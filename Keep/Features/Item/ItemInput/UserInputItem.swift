@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct UserInputItem: Equatable {
+struct UserInputItem: Equatable, Codable {
     let itemSubType: ItemSubType
     let text: String
 }

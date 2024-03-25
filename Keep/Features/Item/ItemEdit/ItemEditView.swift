@@ -22,7 +22,13 @@ struct ItemEditView: View {
     
     var body: some View {
         VStack {
-            ItemInputView(itemSubType: .none, inputType: inputType, displayType: .add, editButtonTap: .constant(""), userInputItem: $userInputItem)
+            ItemInputView(itemSubType: .none,
+                          inputType: inputType,
+                          displayType: .add,
+                          placeholder: "",
+                          refresh: .constant(false),
+                          editButtonTap: .constant(""),
+                          userInputItem: $userInputItem)
                 .frame(minHeight: 50)
                 .padding()
                 .focused($focused, equals: true)

@@ -27,6 +27,7 @@ struct ItemView: View {
     @State private var selectedInputType: ItemInputType? = nil
     @State private var selectedInputField: String = ""
     @State private var userInputItem: UserInputItem? = nil
+    @State private var refresh = false
     
     var body: some View {
         NavigationView {
@@ -40,7 +41,13 @@ struct ItemView: View {
         ScrollView {
             VStack(spacing: 24) {
                 ForEach(viewModel.detailItems, id: \.self) { item in
-                    ItemInputView(itemSubType: item.itemSubType, inputType: item.inputType, displayType: item.displayType, editButtonTap: $editButtonTap, userInputItem: $userInputItem)
+                    ItemInputView(itemSubType: item.itemSubType,
+                                  inputType: item.inputType,
+                                  displayType: item.displayType,
+                                  placeholder: item.placeholder,
+                                  refresh: $refresh,
+                                  editButtonTap: $editButtonTap,
+                                  userInputItem: $userInputItem)
                         .frame(minHeight: 50)
                         .onChange(of: editButtonTap) { newValue in
                             guard newValue == item.itemSubType.rawValue else { return }
@@ -57,8 +64,12 @@ struct ItemView: View {
                 }
                 .foregroundColor(Color(uiColor: .systemBlue))
                 .padding()
+                .disabled(!viewModel.canSave)
                 
-                NavigationLink(destination: ItemEditView(inputType: selectedInputType ?? .plain, inputField: selectedInputField, userInputItem: $userInputItem), isActive: $pushToEdit) {
+                NavigationLink(destination: ItemEditView(inputType: selectedInputType ?? .plain,
+                                                         inputField: selectedInputField,
+                                                         userInputItem: $userInputItem),
+                               isActive: $pushToEdit) {
                     EmptyView()
                 }.hidden()
             }
@@ -66,13 +77,8 @@ struct ItemView: View {
             .padding(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
             .offset(y: -offset)
             .animation(.easeOut(duration: 0.16), value: offset)
-            .gesture(
-                DragGesture().onChanged { gesture in
-                    if gesture.translation.height > 0 {
-                        UIApplication.shared.endEditing()
-                    }
-                })
         }
+        .scrollToDismissKeyboard(mode: .interactively)
         .onChange(of: userInputItem, perform: { newValue in
             guard let new = newValue else { return }
             viewModel.userInputItem.send(new)
@@ -127,9 +133,20 @@ struct ItemView: View {
                     
                 })
         )
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    UIApplication.shared.endEditing()
+                }
+            }
+        }
         .onAppear {
             viewModel.displayType.send(displayType)
             appeared = true
+        }
+        .onChange(of: viewModel.detailItems) { newValue in
+            refresh.toggle()
         }
         
     }

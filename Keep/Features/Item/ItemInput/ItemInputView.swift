@@ -13,6 +13,8 @@ struct ItemInputView: View {
     let itemSubType: ItemSubType
     let inputType: ItemInputType
     let displayType: ItemDisplayType
+    let placeholder: String
+    @Binding var refresh: Bool
     @Binding var editButtonTap: String
     @Binding var userInputItem: UserInputItem?
     
@@ -32,7 +34,7 @@ struct ItemInputView: View {
             ZStack(alignment: .trailing) {
                 switch inputType {
                 case .plain:
-                    TextField(itemSubType.rawValue, text: $text)
+                    TextField(placeholder, text: $text)
                         .multilineTextAlignment(.leading)
                         .padding()
                         .padding(.trailing, 20)
@@ -57,7 +59,7 @@ struct ItemInputView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 17, height: 17)
-                                .foregroundColor(.pink)
+                                .foregroundColor(Color(uiColor: .systemBlue))
                         }
                     }
                     .padding(.trailing, 8)
@@ -99,7 +101,7 @@ struct ItemInputView: View {
                             
                         }
 
-                        Text(itemSubType.rawValue)
+                        Text(placeholder)
                             .foregroundColor(Color(uiColor: .placeholderText))
                             .padding(.horizontal)
                             .padding(.top, 16)
@@ -107,7 +109,7 @@ struct ItemInputView: View {
                             .opacity(text.isEmpty ? 1 : 0)
                     }
                 case .longNumber:
-                    TextField(itemSubType.rawValue, text: $text)
+                    TextField(placeholder, text: $text)
                         .padding()
                         .padding(.trailing, 20)
                         .disabled(displayType != .add)
@@ -138,7 +140,7 @@ struct ItemInputView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 17, height: 17)
-                                .foregroundColor(.pink)
+                                .foregroundColor(Color(uiColor: .systemBlue))
                         }
                     }
                     .padding(.trailing, 8)
@@ -146,7 +148,7 @@ struct ItemInputView: View {
                 case .date:
                     let dateString = selectedDate?.formatted(date: .long, time: .omitted)
 
-                    Text(dateString ?? itemSubType.rawValue)
+                    Text(dateString ?? placeholder)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .foregroundColor(selectedDate != nil ? .black : Color(uiColor: .placeholderText))
                         .padding()
@@ -186,7 +188,7 @@ struct ItemInputView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 17, height: 17)
-                                .foregroundColor(.pink)
+                                .foregroundColor(Color(uiColor: .systemBlue))
                         }
                     }
                     .padding(.trailing, 8)
@@ -210,6 +212,9 @@ struct ItemInputView: View {
         }
         .onChange(of: text) { newValue in
             userInputItem = UserInputItem(itemSubType: itemSubType, text: text)
+        }
+        .onChange(of: refresh) { newValue in
+            text = ""
         }
     }
 }
