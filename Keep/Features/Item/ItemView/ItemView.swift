@@ -59,12 +59,12 @@ struct ItemView: View {
                         }
                 }
                 
-                Button(viewModel.buttonTitle) {
-                    dismiss()
+                Button(viewModel.bottomButtonTitle) {
+                    viewModel.bottomButtonTapped.send()
                 }
-                .foregroundColor(Color(uiColor: .systemBlue))
+                .foregroundColor(Color(uiColor: displayType == .current ? .systemRed : .systemBlue))
                 .padding()
-                .disabled(!viewModel.canSave)
+                .disabled(!viewModel.bottomButtonEnabled)
                 
                 NavigationLink(destination: ItemEditView(inputType: selectedInputType ?? .plain,
                                                          inputField: selectedInputField,
@@ -79,24 +79,6 @@ struct ItemView: View {
             .animation(.easeOut(duration: 0.16), value: offset)
         }
         .scrollToDismissKeyboard(mode: .interactively)
-        .onChange(of: userInputItem, perform: { newValue in
-            guard let new = newValue else { return }
-            viewModel.userInputItem.send(new)
-        })
-        .onReceive(Publishers.keyboardHeight) { height in
-            let isUp = height > 1
-            let setUpOffset = {
-                let keyboardTop = UIScreen.main.bounds.height - height
-                let focusedTextInputBottom = (UIResponder.currentFirstResponder()?.globalFrame?.maxY ?? 0) + 45//20
-                self.offset = max(0, focusedTextInputBottom - keyboardTop)
-            }
-            
-            if isUp {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.16, execute: setUpOffset)
-            } else {
-                setUpOffset()
-            }
-        }
         .animation(.easeOut(duration: 0.16), value: appeared)
         .edgesIgnoringSafeArea(.bottom)
         .background(Color.mainGray)
@@ -145,9 +127,28 @@ struct ItemView: View {
             viewModel.displayType.send(displayType)
             appeared = true
         }
-        .onChange(of: viewModel.detailItems) { newValue in
-            refresh.toggle()
+        .onChange(of: userInputItem, perform: { newValue in
+            guard let new = newValue else { return }
+            viewModel.userInputItem.send(new)
+        })
+        .onReceive(viewModel.$shouldDismiss) { shouldDismiss in
+            if shouldDismiss {
+                dismiss()
+            }
         }
-        
+        .onReceive(Publishers.keyboardHeight) { height in
+            let isUp = height > 1
+            let setUpOffset = {
+                let keyboardTop = UIScreen.main.bounds.height - height
+                let focusedTextInputBottom = (UIResponder.currentFirstResponder()?.globalFrame?.maxY ?? 0) + 45//20
+                self.offset = max(0, focusedTextInputBottom - keyboardTop)
+            }
+            
+            if isUp {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.16, execute: setUpOffset)
+            } else {
+                setUpOffset()
+            }
+        }
     }
 }
