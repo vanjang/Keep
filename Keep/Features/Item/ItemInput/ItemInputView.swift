@@ -107,6 +107,7 @@ struct ItemInputView: View {
                             .padding(.top, 16)
                             .padding(.leading, 4)
                             .opacity(text.isEmpty ? 1 : 0)
+                            .allowsHitTesting(false)
                     }
                 case .longNumber:
                     TextField(placeholder, text: $text)
