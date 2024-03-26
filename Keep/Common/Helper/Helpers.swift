@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+enum Helpers {
+    static func randomString(length: Int = 6, isNumber: Bool = false) -> String {
+        let letters = isNumber ? "0123456789" : "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return String((0..<length).map{ _ in letters.randomElement()! })
+    }
+}

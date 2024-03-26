@@ -8,7 +8,11 @@
 import Foundation
 
 struct Serializer<UserData: Codable>: SerializeType {
-    func getData(object: UserData) throws -> Data {
+    func decodeData(data: Data) throws -> UserData {
+        try JSONDecoder().decode(UserData.self, from: data)
+    }
+    
+    func encodeData(object: UserData) throws -> Data {
         try JSONEncoder().encode(object)
     }
 }

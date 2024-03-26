@@ -6,20 +6,16 @@
 //
 
 import Foundation
+import Combine
 
-struct KeychainService<UserData: Codable, Serializer: SerializeType> {
+struct KeychainService<Serializer: SerializeType> {
     let serializer: Serializer
     
     var serviceName: String {
         Bundle.main.bundleIdentifier ?? "KeychainStore"
     }
     
-    enum KeychainError: Error {
-        case duplicatedItem
-        case unexpectedError
-    }
-    
-    func createBaseQueryDicionary(forKey key: String) -> [String: Any?] {
+    func createBaseQueryDictionary(forKey key: String) -> [String: Any?] {
         let encodedKey = key.data(using: .utf8)
         return [
             kSecClass as String: kSecClassGenericPassword,
@@ -30,46 +26,87 @@ struct KeychainService<UserData: Codable, Serializer: SerializeType> {
         ]
     }
     
-    func save(data: Serializer.UserData, forKey key: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        do {
-            let d = try serializer.getData(object: data)
-            var query = self.createBaseQueryDicionary(forKey: key)
-            query[kSecValueData as String] = d as CFData
+    func save(data: Serializer.UserData, forKey key: String) -> AnyPublisher<Void, KeychainError> {
+        return Future<Void, KeychainError> { promise in
+            do {
+                let d = try serializer.encodeData(object: data)
+                var query = self.createBaseQueryDictionary(forKey: key)
+                query[kSecValueData as String] = d as CFData
+                
+                var result: CFTypeRef?
+                let status: OSStatus = SecItemAdd(query as CFDictionary, &result)
+                
+                if status == errSecSuccess {
+                    promise(.success(()))
+                } else if status == errSecDuplicateItem {
+                    promise(.failure(KeychainError.duplicatedItem))
+                } else if let error = result?.error, let _error = error {
+                    promise(.failure(.generalError(_error)))
+                } else {
+                    promise(.failure(KeychainError.unexpectedError))
+                }
+            } catch {
+                promise(.failure(.generalError(error)))
+            }
+        }.eraseToAnyPublisher()
+    }
+    
+    func loadData(forKey key: String) -> AnyPublisher<Serializer.UserData, KeychainError> {
+        return Future<Serializer.UserData, KeychainError> { promise in
+            var query = self.createBaseQueryDictionary(forKey: key)
+            query[kSecMatchLimit as String] = kSecMatchLimitOne
+            query[kSecReturnData as String] = kCFBooleanTrue
             
             var result: CFTypeRef?
-            let status: OSStatus = SecItemAdd(query as CFDictionary, &result)
+            let _: OSStatus = SecItemCopyMatching(query as CFDictionary, &result)
+            
+            do {
+                guard let data = result as? Data else {
+                    promise(.failure(KeychainError.noItem))
+                    return }
+                let userData = try serializer.decodeData(data: data)
+                promise(.success(userData))
+            } catch {
+                promise(.failure(.generalError(error)))
+            }
+        }.eraseToAnyPublisher()
+    }
+    
+    func update(_ data: Serializer.UserData, forKey key: String) -> AnyPublisher<Void, KeychainError> {
+        return Future<Void, KeychainError> { promise in
+            do {
+                let d = try serializer.encodeData(object: data)
+                let query = self.createBaseQueryDictionary(forKey: key) as CFDictionary
+                let updateDictionary = [kSecValueData as String: d] as CFDictionary
+                
+                let status: OSStatus = SecItemUpdate(query, updateDictionary)
+                
+                if status == errSecSuccess {
+                    promise(.success(()))
+                } else {
+                    promise(.failure(KeychainError.unexpectedError))
+                }
+                
+            } catch {
+                promise(.failure(.generalError(error)))
+            }
+        }.eraseToAnyPublisher()
+    }
+    
+    func deleteCache(forKey key: String) -> AnyPublisher<Void, KeychainError> {
+        return Future<Void, KeychainError> { promise in
+            let query = [
+                kSecClass as String: kSecClassGenericPassword,
+                kSecAttrService as String: self.serviceName
+            ] as [String : Any] as CFDictionary
+            
+            let status: OSStatus = SecItemDelete(query)
             
             if status == errSecSuccess {
-                completion(.success(()))
-            } else if status == errSecDuplicateItem {
-                self.update(d, forKey: key, completion: completion)
-            } else if let error = result?.error, let _error = error {
-                completion(.failure(_error))
+                promise(.success(()))
             } else {
-                completion(.failure(KeychainError.unexpectedError))
+                promise(.failure(KeychainError.unexpectedError))
             }
-        } catch {
-            completion(.failure(error))
-        }
-    }
-    
-    func update(_ data: Data, forKey key: String, completion: @escaping (Result<Void,Error>) -> Void) {
-        let query = self.createBaseQueryDicionary(forKey: key) as CFDictionary
-        let updateDictionary = [kSecValueData as String: data] as CFDictionary
-        
-        let status: OSStatus = SecItemUpdate(query, updateDictionary)
-        
-        completion(status == errSecSuccess ? .success(()) : .failure(KeychainError.unexpectedError))
-    }
-    
-    func deleteCache(forKey key: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        let query = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: self.serviceName
-        ] as [String : Any] as CFDictionary
-        
-        let status: OSStatus = SecItemDelete(query)
-        
-        completion(status == errSecSuccess ? .success(()) : .failure(KeychainError.unexpectedError))
+        }.eraseToAnyPublisher()
     }
 }

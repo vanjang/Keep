@@ -15,6 +15,15 @@
 		A337929A2B853A2000CF7FE1 /* KeepUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33792992B853A2000CF7FE1 /* KeepUITests.swift */; };
 		A337929C2B853A2000CF7FE1 /* KeepUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A337929B2B853A2000CF7FE1 /* KeepUITestsLaunchTests.swift */; };
 		A35171042BB1CBA000A24D19 /* ItemBarButtonActionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171032BB1CBA000A24D19 /* ItemBarButtonActionType.swift */; };
+		A35171072BB33AE400A24D19 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171062BB33AE400A24D19 /* Helpers.swift */; };
+		A35171092BB366D200A24D19 /* KeepError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171082BB366D200A24D19 /* KeepError.swift */; };
+		A351710C2BB367E200A24D19 /* KeepItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351710B2BB367E200A24D19 /* KeepItem.swift */; };
+		A351710E2BB3681400A24D19 /* Password.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351710D2BB3681400A24D19 /* Password.swift */; };
+		A35171102BB3682300A24D19 /* BankAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351710F2BB3682300A24D19 /* BankAccount.swift */; };
+		A35171122BB3683100A24D19 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171112BB3683100A24D19 /* Card.swift */; };
+		A35171142BB3683900A24D19 /* Etc.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171132BB3683900A24D19 /* Etc.swift */; };
+		A35171162BB3814F00A24D19 /* KeychainError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171152BB3814F00A24D19 /* KeychainError.swift */; };
+		A35171182BB3880D00A24D19 /* KeepKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171172BB3880D00A24D19 /* KeepKey.swift */; };
 		A368B0AC2B911FC600AEBC15 /* MainListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A368B0AB2B911FC600AEBC15 /* MainListViewModel.swift */; };
 		A368B0AE2B91238300AEBC15 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A368B0AD2B91238300AEBC15 /* AuthView.swift */; };
 		A368B0B12B91280000AEBC15 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A368B0B02B91280000AEBC15 /* MainView.swift */; };
@@ -82,6 +91,15 @@
 		A33792992B853A2000CF7FE1 /* KeepUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepUITests.swift; sourceTree = "<group>"; };
 		A337929B2B853A2000CF7FE1 /* KeepUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A35171032BB1CBA000A24D19 /* ItemBarButtonActionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemBarButtonActionType.swift; sourceTree = "<group>"; };
+		A35171062BB33AE400A24D19 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
+		A35171082BB366D200A24D19 /* KeepError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepError.swift; sourceTree = "<group>"; };
+		A351710B2BB367E200A24D19 /* KeepItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepItem.swift; sourceTree = "<group>"; };
+		A351710D2BB3681400A24D19 /* Password.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Password.swift; sourceTree = "<group>"; };
+		A351710F2BB3682300A24D19 /* BankAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BankAccount.swift; sourceTree = "<group>"; };
+		A35171112BB3683100A24D19 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
+		A35171132BB3683900A24D19 /* Etc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Etc.swift; sourceTree = "<group>"; };
+		A35171152BB3814F00A24D19 /* KeychainError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainError.swift; sourceTree = "<group>"; };
+		A35171172BB3880D00A24D19 /* KeepKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepKey.swift; sourceTree = "<group>"; };
 		A368B0AB2B911FC600AEBC15 /* MainListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainListViewModel.swift; sourceTree = "<group>"; };
 		A368B0AD2B91238300AEBC15 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		A368B0B02B91280000AEBC15 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -192,6 +210,26 @@
 			path = KeepUITests;
 			sourceTree = "<group>";
 		};
+		A35171052BB33AD800A24D19 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				A35171062BB33AE400A24D19 /* Helpers.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		A351710A2BB367D200A24D19 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A351710B2BB367E200A24D19 /* KeepItem.swift */,
+				A351710D2BB3681400A24D19 /* Password.swift */,
+				A351710F2BB3682300A24D19 /* BankAccount.swift */,
+				A35171112BB3683100A24D19 /* Card.swift */,
+				A35171132BB3683900A24D19 /* Etc.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		A368B0AF2B9127DC00AEBC15 /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,6 +283,8 @@
 				A387CBBE2BB054B400E6231E /* KeychainService.swift */,
 				A387CBC02BB0EA9400E6231E /* SerializeType.swift */,
 				A387CBC22BB0EAA000E6231E /* Serializer.swift */,
+				A35171152BB3814F00A24D19 /* KeychainError.swift */,
+				A35171172BB3880D00A24D19 /* KeepKey.swift */,
 			);
 			path = Keychain;
 			sourceTree = "<group>";
@@ -262,6 +302,7 @@
 		A3CD40352B86A52900CB3F25 /* Item */ = {
 			isa = PBXGroup;
 			children = (
+				A351710A2BB367D200A24D19 /* Model */,
 				A387CBAE2BADE88E00E6231E /* ItemView */,
 				A387CBAC2BADE86000E6231E /* ItemEdit */,
 				A387CBA92BACD37000E6231E /* ItemInput */,
@@ -274,6 +315,7 @@
 			isa = PBXGroup;
 			children = (
 				A3CD40432B890CF100CB3F25 /* BounceBehavior.swift */,
+				A35171082BB366D200A24D19 /* KeepError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -289,6 +331,7 @@
 		A3DA1D062B85470B00B821DA /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				A35171052BB33AD800A24D19 /* Helper */,
 				A387CBBD2BB0410B00E6231E /* Keychain */,
 				A3CD404B2B8910FA00CB3F25 /* Modifiers */,
 				A3CD40422B890CDD00CB3F25 /* Models */,
@@ -488,10 +531,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A35171142BB3683900A24D19 /* Etc.swift in Sources */,
 				A3CD40482B890D7100CB3F25 /* UIApplication+Extension.swift in Sources */,
+				A35171072BB33AE400A24D19 /* Helpers.swift in Sources */,
 				A387CBC32BB0EAA000E6231E /* Serializer.swift in Sources */,
 				A368B0EB2BA260AF00AEBC15 /* AuthButton.swift in Sources */,
 				A368B0E92BA2608900AEBC15 /* AuthManager.swift in Sources */,
+				A351710C2BB367E200A24D19 /* KeepItem.swift in Sources */,
 				A3DA1D162B8562FE00B821DA /* UIColor+Extension.swift in Sources */,
 				A387CBBC2BAF9DC700E6231E /* UserInputItem.swift in Sources */,
 				A3CD40442B890CF100CB3F25 /* BounceBehavior.swift in Sources */,
@@ -501,11 +547,14 @@
 				A35171042BB1CBA000A24D19 /* ItemBarButtonActionType.swift in Sources */,
 				A368B0EF2BA3065500AEBC15 /* ItemInputItem.swift in Sources */,
 				A368B0ED2BA26D8900AEBC15 /* ItemViewModel.swift in Sources */,
+				A35171162BB3814F00A24D19 /* KeychainError.swift in Sources */,
 				A3CD40412B87F69700CB3F25 /* ItemInputType.swift in Sources */,
 				A368B0B12B91280000AEBC15 /* MainView.swift in Sources */,
 				A368B0F12BABA41200AEBC15 /* Publishers+Extension.swift in Sources */,
 				A368B0F52BAC3B0700AEBC15 /* DatePickerView.swift in Sources */,
+				A35171102BB3682300A24D19 /* BankAccount.swift in Sources */,
 				A3DA1D0D2B85518C00B821DA /* MainListView.swift in Sources */,
+				A35171092BB366D200A24D19 /* KeepError.swift in Sources */,
 				A3CD40342B86967500CB3F25 /* TransparenNavigationView.swift in Sources */,
 				A387CBB22BAE8A0500E6231E /* ManualPopBackModifier.swift in Sources */,
 				A387CBB42BAE8AE800E6231E /* View+Extension.swift in Sources */,
@@ -513,9 +562,12 @@
 				A3DA1D142B8561DF00B821DA /* Color+Extension.swift in Sources */,
 				A387CBC12BB0EA9400E6231E /* SerializeType.swift in Sources */,
 				A3DA1D112B855F8F00B821DA /* MainRowView.swift in Sources */,
+				A35171122BB3683100A24D19 /* Card.swift in Sources */,
 				A3CD403D2B87AD2300CB3F25 /* ItemInputView.swift in Sources */,
 				A3DA1D0F2B855ED400B821DA /* NavigationTitleView.swift in Sources */,
+				A35171182BB3880D00A24D19 /* KeepKey.swift in Sources */,
 				A368B0AE2B91238300AEBC15 /* AuthView.swift in Sources */,
+				A351710E2BB3681400A24D19 /* Password.swift in Sources */,
 				A3CD404A2B890D9900CB3F25 /* ItemDisplayType.swift in Sources */,
 				A368B0F32BABA44400AEBC15 /* UIResponder+Extension.swift in Sources */,
 				A33792792B853A0900CF7FE1 /* AppDelegate.swift in Sources */,

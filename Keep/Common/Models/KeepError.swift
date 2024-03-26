@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+enum KeepError: Error {
+    case unexpectedError
+    case unknown
+    case generalError(Error)
+    case none
+}

@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+enum KeychainError: Error {
+    case duplicatedItem
+    case unexpectedError
+    case noItem
+    case generalError(Error)
+}

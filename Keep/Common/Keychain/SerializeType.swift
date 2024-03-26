@@ -10,5 +10,6 @@ import Foundation
 protocol SerializeType {
     associatedtype UserData
     
-    func getData(object: UserData) throws -> Data
+    func encodeData(object: UserData) throws -> Data
+    func decodeData(data: Data) throws -> UserData
 }

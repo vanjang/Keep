@@ -6,3 +6,5 @@
 //
 
 import Foundation
+
+let keepKey = "KeepKey"
