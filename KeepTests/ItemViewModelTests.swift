@@ -5,11 +5,15 @@
 //  Created by myung hoon on 28/03/2024.
 //
 
+@testable import Keep
 import XCTest
 
 final class ItemViewModelTests: XCTestCase {
 
     override func setUpWithError() throws {
+        let vm = ItemViewModel(logic: ItemViewModelLogic())
+        //'shouldUpdate' is inaccessible due to 'private' protection level
+        vm.shouldUpdate
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 
