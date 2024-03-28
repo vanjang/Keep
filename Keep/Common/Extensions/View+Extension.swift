@@ -12,3 +12,10 @@ extension View {
         ManualPopBackModifier(content: self)
     }
 }
+
+extension View {
+    func adjustOffsetbyKeyboardHeight() -> some View {
+        OffsetAdjustableModifier(content: self)
+    }
+}
+

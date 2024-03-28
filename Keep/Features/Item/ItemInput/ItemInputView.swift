@@ -10,17 +10,19 @@ import Combine
 
 struct ItemInputView: View {
     // init
-    let placeholder: String
+    let itemSubType: ItemSubType
     let inputType: ItemInputType
     let displayType: ItemDisplayType
+    let placeholder: String
+    @Binding var refresh: Bool
     @Binding var editButtonTap: String
+    @Binding var userInputItem: UserInputItem?
     
     // states
     @State private var text = ""
     @State private var isEditing = false
     @State private var didBeginEditing = false
     @State private var previousValue: String = ""
-    @State private var isKeypadDigit = false
     @State private var selectedDate: Date? = nil
     @State private var isShowingDatePicker = false
 
@@ -31,7 +33,7 @@ struct ItemInputView: View {
         HStack {
             ZStack(alignment: .trailing) {
                 switch inputType {
-                case .textField:
+                case .plain:
                     TextField(placeholder, text: $text)
                         .multilineTextAlignment(.leading)
                         .padding()
@@ -40,7 +42,6 @@ struct ItemInputView: View {
                         .background(.white)
                         .cornerRadius(16)
                         .textFieldStyle(PlainTextFieldStyle())
-                        .keyboardType(isKeypadDigit ? .numberPad: .default)
 
                     Button(action: {
                         text = ""
@@ -58,11 +59,11 @@ struct ItemInputView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 17, height: 17)
-                                .foregroundColor(.pink)
+                                .foregroundColor(Color(uiColor: .systemBlue))
                         }
                     }
                     .padding(.trailing, 8)
-                case .textEditor:
+                case .multiLine:
                     ZStack(alignment: .topLeading) {
                         VStack {
                             TextEditor(text: $text)
@@ -106,8 +107,9 @@ struct ItemInputView: View {
                             .padding(.top, 16)
                             .padding(.leading, 4)
                             .opacity(text.isEmpty ? 1 : 0)
+                            .allowsHitTesting(false)
                     }
-                case .cardNumber:
+                case .longNumber:
                     TextField(placeholder, text: $text)
                         .padding()
                         .padding(.trailing, 20)
@@ -115,7 +117,6 @@ struct ItemInputView: View {
                         .background(.white)
                         .cornerRadius(16)
                         .textFieldStyle(PlainTextFieldStyle())
-                        .keyboardType(isKeypadDigit ? .numberPad: .default)
                         .onChange(of: text) { newValue in
                             let deleting = newValue.count < previousValue.count
                             if !deleting && newValue.count % 5 == 0 && newValue.count > 0 {
@@ -140,7 +141,7 @@ struct ItemInputView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 17, height: 17)
-                                .foregroundColor(.pink)
+                                .foregroundColor(Color(uiColor: .systemBlue))
                         }
                     }
                     .padding(.trailing, 8)
@@ -188,7 +189,7 @@ struct ItemInputView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 17, height: 17)
-                                .foregroundColor(.pink)
+                                .foregroundColor(Color(uiColor: .systemBlue))
                         }
                     }
                     .padding(.trailing, 8)
@@ -199,7 +200,7 @@ struct ItemInputView: View {
             
             if displayType == .edit {
                 Button {
-                    editButtonTap = placeholder
+                    editButtonTap = itemSubType.rawValue
                 } label: {
                     Image(systemName: "chevron.right")
                         .resizable()
@@ -209,6 +210,12 @@ struct ItemInputView: View {
                 }
             }
             
+        }
+        .onChange(of: text) { newValue in
+            userInputItem = UserInputItem(itemSubType: itemSubType, text: text)
+        }
+        .onChange(of: refresh) { newValue in
+            text = ""
         }
     }
 }

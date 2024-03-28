@@ -8,16 +8,27 @@
 import SwiftUI
 
 struct ItemEditView: View {
+    // init
+    let inputType: ItemInputType
+    let inputField: String
+    @Binding var userInputItem: UserInputItem?
+
+    // environments
     @Environment(\.dismiss) var dismiss
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
-    @FocusState var focused: Bool?
+    // states
+    @FocusState private var focused: Bool?
     
-    let inputType: ItemInputType
-    let inputField: String
     var body: some View {
         VStack {
-            ItemInputView(placeholder: "", inputType: inputType, displayType: .add, editButtonTap: .constant(""))
+            ItemInputView(itemSubType: .none,
+                          inputType: inputType,
+                          displayType: .add,
+                          placeholder: "",
+                          refresh: .constant(false),
+                          editButtonTap: .constant(""),
+                          userInputItem: $userInputItem)
                 .frame(minHeight: 50)
                 .padding()
                 .focused($focused, equals: true)

@@ -23,6 +23,8 @@ struct MainListView: View {
     init(searchText: String = "") {
         self.searchText = searchText
         UISearchBar.appearance().tintColor = .systemBlue
+        
+        print("###local storage path(for debugging on simulator) : \(String(describing: try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)))")
     }
     
     var body: some View {
