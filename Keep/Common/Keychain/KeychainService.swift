@@ -8,10 +8,12 @@
 import Foundation
 import Combine
 
-struct KeychainService<Serializer: SerializeType> {
+struct KeychainService<Serializer: SerializeType>: KeychainServiceType {
+    typealias UserData = Serializer.UserData
+    
     let serializer: Serializer
     
-    var serviceName: String {
+    private var serviceName: String {
         Bundle.main.bundleIdentifier ?? "KeychainStore"
     }
     
@@ -26,7 +28,7 @@ struct KeychainService<Serializer: SerializeType> {
         ]
     }
     
-    func save(data: Serializer.UserData, forKey key: String) -> AnyPublisher<Void, KeychainError> {
+    func save(data: UserData, forKey key: String) -> AnyPublisher<Void, KeychainError> {
         return Future<Void, KeychainError> { promise in
             do {
                 let d = try serializer.encodeData(object: data)
@@ -52,7 +54,7 @@ struct KeychainService<Serializer: SerializeType> {
     }
     
     func loadData(forKey key: String) -> AnyPublisher<Serializer.UserData, KeychainError> {
-        return Future<Serializer.UserData, KeychainError> { promise in
+        return Future<UserData, KeychainError> { promise in
             var query = self.createBaseQueryDictionary(forKey: key)
             query[kSecMatchLimit as String] = kSecMatchLimitOne
             query[kSecReturnData as String] = kCFBooleanTrue
@@ -72,7 +74,7 @@ struct KeychainService<Serializer: SerializeType> {
         }.eraseToAnyPublisher()
     }
     
-    func update(_ data: Serializer.UserData, forKey key: String) -> AnyPublisher<Void, KeychainError> {
+    func update(_ data: UserData, forKey key: String) -> AnyPublisher<Void, KeychainError> {
         return Future<Void, KeychainError> { promise in
             do {
                 let d = try serializer.encodeData(object: data)
@@ -93,7 +95,7 @@ struct KeychainService<Serializer: SerializeType> {
         }.eraseToAnyPublisher()
     }
     
-    func deleteCache(forKey key: String) -> AnyPublisher<Void, KeychainError> {
+    func delete(forKey key: String) -> AnyPublisher<Void, KeychainError> {
         return Future<Void, KeychainError> { promise in
             let query = [
                 kSecClass as String: kSecClassGenericPassword,
