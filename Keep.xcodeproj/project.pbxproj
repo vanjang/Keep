@@ -24,6 +24,12 @@
 		A35171142BB3683900A24D19 /* Etc.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171132BB3683900A24D19 /* Etc.swift */; };
 		A35171162BB3814F00A24D19 /* KeychainError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171152BB3814F00A24D19 /* KeychainError.swift */; };
 		A35171182BB3880D00A24D19 /* KeepKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171172BB3880D00A24D19 /* KeepKey.swift */; };
+		A351711A2BB38A8D00A24D19 /* KeychainContainable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171192BB38A8D00A24D19 /* KeychainContainable.swift */; };
+		A351711C2BB495AF00A24D19 /* OffsetAdjustableModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351711B2BB495AF00A24D19 /* OffsetAdjustableModifier.swift */; };
+		A351711E2BB497D300A24D19 /* KeychainContainableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351711D2BB497D300A24D19 /* KeychainContainableViewModel.swift */; };
+		A35171202BB4982500A24D19 /* KeychainServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351711F2BB4982500A24D19 /* KeychainServiceType.swift */; };
+		A35171222BB4C92D00A24D19 /* ItemViewModelLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171212BB4C92D00A24D19 /* ItemViewModelLogic.swift */; };
+		A35171262BB5785000A24D19 /* ItemViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171252BB5785000A24D19 /* ItemViewModelTests.swift */; };
 		A368B0AC2B911FC600AEBC15 /* MainListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A368B0AB2B911FC600AEBC15 /* MainListViewModel.swift */; };
 		A368B0AE2B91238300AEBC15 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A368B0AD2B91238300AEBC15 /* AuthView.swift */; };
 		A368B0B12B91280000AEBC15 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A368B0B02B91280000AEBC15 /* MainView.swift */; };
@@ -100,6 +106,12 @@
 		A35171132BB3683900A24D19 /* Etc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Etc.swift; sourceTree = "<group>"; };
 		A35171152BB3814F00A24D19 /* KeychainError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainError.swift; sourceTree = "<group>"; };
 		A35171172BB3880D00A24D19 /* KeepKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeepKey.swift; sourceTree = "<group>"; };
+		A35171192BB38A8D00A24D19 /* KeychainContainable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainContainable.swift; sourceTree = "<group>"; };
+		A351711B2BB495AF00A24D19 /* OffsetAdjustableModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffsetAdjustableModifier.swift; sourceTree = "<group>"; };
+		A351711D2BB497D300A24D19 /* KeychainContainableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainContainableViewModel.swift; sourceTree = "<group>"; };
+		A351711F2BB4982500A24D19 /* KeychainServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainServiceType.swift; sourceTree = "<group>"; };
+		A35171212BB4C92D00A24D19 /* ItemViewModelLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemViewModelLogic.swift; sourceTree = "<group>"; };
+		A35171252BB5785000A24D19 /* ItemViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemViewModelTests.swift; sourceTree = "<group>"; };
 		A368B0AB2B911FC600AEBC15 /* MainListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainListViewModel.swift; sourceTree = "<group>"; };
 		A368B0AD2B91238300AEBC15 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		A368B0B02B91280000AEBC15 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -197,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				A337928F2B853A2000CF7FE1 /* KeepTests.swift */,
+				A35171252BB5785000A24D19 /* ItemViewModelTests.swift */,
 			);
 			path = KeepTests;
 			sourceTree = "<group>";
@@ -273,6 +286,7 @@
 			children = (
 				A3CD40362B86A53D00CB3F25 /* ItemView.swift */,
 				A368B0EC2BA26D8900AEBC15 /* ItemViewModel.swift */,
+				A35171212BB4C92D00A24D19 /* ItemViewModelLogic.swift */,
 			);
 			path = ItemView;
 			sourceTree = "<group>";
@@ -281,10 +295,13 @@
 			isa = PBXGroup;
 			children = (
 				A387CBBE2BB054B400E6231E /* KeychainService.swift */,
+				A351711F2BB4982500A24D19 /* KeychainServiceType.swift */,
 				A387CBC02BB0EA9400E6231E /* SerializeType.swift */,
 				A387CBC22BB0EAA000E6231E /* Serializer.swift */,
 				A35171152BB3814F00A24D19 /* KeychainError.swift */,
 				A35171172BB3880D00A24D19 /* KeepKey.swift */,
+				A35171192BB38A8D00A24D19 /* KeychainContainable.swift */,
+				A351711D2BB497D300A24D19 /* KeychainContainableViewModel.swift */,
 			);
 			path = Keychain;
 			sourceTree = "<group>";
@@ -324,6 +341,7 @@
 			isa = PBXGroup;
 			children = (
 				A387CBB12BAE8A0500E6231E /* ManualPopBackModifier.swift */,
+				A351711B2BB495AF00A24D19 /* OffsetAdjustableModifier.swift */,
 			);
 			path = Modifiers;
 			sourceTree = "<group>";
@@ -531,6 +549,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A35171222BB4C92D00A24D19 /* ItemViewModelLogic.swift in Sources */,
 				A35171142BB3683900A24D19 /* Etc.swift in Sources */,
 				A3CD40482B890D7100CB3F25 /* UIApplication+Extension.swift in Sources */,
 				A35171072BB33AE400A24D19 /* Helpers.swift in Sources */,
@@ -544,6 +563,7 @@
 				A3CD40372B86A53D00CB3F25 /* ItemView.swift in Sources */,
 				A3CD403F2B87F5BC00CB3F25 /* ItemType.swift in Sources */,
 				A387CBBA2BAF754F00E6231E /* ItemSubType.swift in Sources */,
+				A351711A2BB38A8D00A24D19 /* KeychainContainable.swift in Sources */,
 				A35171042BB1CBA000A24D19 /* ItemBarButtonActionType.swift in Sources */,
 				A368B0EF2BA3065500AEBC15 /* ItemInputItem.swift in Sources */,
 				A368B0ED2BA26D8900AEBC15 /* ItemViewModel.swift in Sources */,
@@ -560,6 +580,8 @@
 				A387CBB42BAE8AE800E6231E /* View+Extension.swift in Sources */,
 				A387CBB02BADE8AC00E6231E /* ItemEditView.swift in Sources */,
 				A3DA1D142B8561DF00B821DA /* Color+Extension.swift in Sources */,
+				A351711C2BB495AF00A24D19 /* OffsetAdjustableModifier.swift in Sources */,
+				A35171202BB4982500A24D19 /* KeychainServiceType.swift in Sources */,
 				A387CBC12BB0EA9400E6231E /* SerializeType.swift in Sources */,
 				A3DA1D112B855F8F00B821DA /* MainRowView.swift in Sources */,
 				A35171122BB3683100A24D19 /* Card.swift in Sources */,
@@ -577,6 +599,7 @@
 				A387CBB62BAE8E3E00E6231E /* MainListItem.swift in Sources */,
 				A3CD403B2B86D06600CB3F25 /* SettingsView.swift in Sources */,
 				A368B0AC2B911FC600AEBC15 /* MainListViewModel.swift in Sources */,
+				A351711E2BB497D300A24D19 /* KeychainContainableViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -585,6 +608,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A33792902B853A2000CF7FE1 /* KeepTests.swift in Sources */,
+				A35171262BB5785000A24D19 /* ItemViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
