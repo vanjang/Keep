@@ -1,5 +1,5 @@
 //
-//  ItemInputView.swift
+//  ItemDetailView.swift
 //  Keep
 //
 //  Created by myung hoon on 22/02/2024.
@@ -8,8 +8,8 @@
 import SwiftUI
 import Combine
 
-struct ItemInputView: View {
-    // init
+struct ItemDetailView: View {
+    //MARK: - init
     let itemSubType: ItemSubType
     let inputType: ItemInputType
     let displayType: ItemDisplayType
@@ -18,7 +18,7 @@ struct ItemInputView: View {
     @Binding var editButtonTap: String
     @Binding var userInputItem: UserInputItem?
     
-    // states
+    //MARK: - states
     @State private var text = ""
     @State private var isEditing = false
     @State private var didBeginEditing = false
@@ -26,7 +26,7 @@ struct ItemInputView: View {
     @State private var selectedDate: Date? = nil
     @State private var isShowingDatePicker = false
 
-    //
+    //MARK: -
     private let characterLimit = 500
     
     var body: some View {
@@ -52,9 +52,7 @@ struct ItemInputView: View {
                                 .scaledToFit()
                                 .frame(width: 17, height: 17)
                                 .foregroundColor(Color(uiColor: .systemBlue))
-                        } else
-
-                        if !text.isEmpty {
+                        } else if !text.isEmpty {
                             Image(systemName: "x.circle")
                                 .resizable()
                                 .scaledToFit()
@@ -134,9 +132,7 @@ struct ItemInputView: View {
                                 .scaledToFit()
                                 .frame(width: 17, height: 17)
                                 .foregroundColor(Color(uiColor: .systemBlue))
-                        } else
-
-                        if !text.isEmpty {
+                        } else if !text.isEmpty {
                             Image(systemName: "x.circle")
                                 .resizable()
                                 .scaledToFit()

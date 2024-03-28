@@ -1,32 +1,26 @@
 //
-//  ItemViewModel.swift
+//  AddItemViewModel.swift
 //  Keep
 //
 //  Created by myung hoon on 13/03/2024.
 //
 
-import Foundation
 import Combine
-import UIKit
 
-final class ItemViewModel: KeychainContainableViewModel {
+final class AddItemViewModel: KeychainContainableViewModel {
     //MARK: - inputs
-    let displayType = PassthroughSubject<ItemDisplayType, Never>()
-    let selectedItemType = CurrentValueSubject<ItemType, Never>(.password)
+    let actionSheetButtonTap = CurrentValueSubject<ItemType, Never>(.password)
     let userInputItem = PassthroughSubject<UserInputItem, Never>()
-    let bottomButtonTapped = PassthroughSubject<Void, Never>()
+    let addButtonTapped = PassthroughSubject<Void, Never>()
     
     //MARK: - outputs
     @Published private(set) var title = ""
-    @Published private(set) var itemTypes: [ItemType] = []
-    @Published private(set) var bottomButtonTitle = ""
-    @Published private(set) var barButtonTitle = ""
-    @Published private(set) var detailItems: [ItemInputItem] = []
-    @Published private(set) var barButtonActionType: ItemBarButtonActionType = .current
-    @Published private(set) var bottomButtonEnabled = false
+    @Published private(set) var actionSheetItemTypes: [ItemType] = []
+    @Published private(set) var items: [AddItem] = []
+    @Published private(set) var addButtonEnabled = false
     @Published private(set) var shouldDismiss = false
+    @Published private(set) var shouldRefresh = false
     @Published private(set) var error: KeepError = .none
-    @Published private(set) var bottomButtonColor: UIColor = .systemRed
     
     //MARK: - Injection
     private let logic: ItemViewModelLogic
@@ -43,115 +37,87 @@ final class ItemViewModel: KeychainContainableViewModel {
     //MARK: - Binders
     private func setupBindings() {
         bindTitle()
-        bindItemTypes()
-        bindBottomButtonColor()
+        bindActionSheetItemTypes()
         bindInputItems()
-        bindBarButtonActionType()
-        bindBottomButtonTitle()
-        bindBarButtonTitle()
-        bindBottomButtonEnabled()
+        bindShouldRefresh()
+        bindAddButtonEnabled()
         bindSaveItem()
-        bindDeleteItem()
         bindUpdate()
     }
     
+    /// Binding navigation bar tile
     private func bindTitle() {
-        selectedItemType
+        actionSheetButtonTap
             .map { $0.rawValue }
             .assignNoRetain(to: \.title, on: self)
             .store(in: &cancellables)
     }
     
-    private func bindItemTypes() {
-        selectedItemType
+    /// Binding ActionSheet item types to appear when action sheet button is tapped.
+    private func bindActionSheetItemTypes() {
+        actionSheetButtonTap
             .map(logic.getItemTypes)
-            .assignNoRetain(to: \.itemTypes, on: self)
+            .assignNoRetain(to: \.actionSheetItemTypes, on: self)
             .store(in: &cancellables)
     }
     
-    private func bindBottomButtonColor() {
-        displayType
-            .map(logic.getBottomButtonColor)
-            .assignNoRetain(to: \.bottomButtonColor, on: self)
-            .store(in: &cancellables)
-    }
-    
+    /// Binding input items reacting the current ItemType
     private func bindInputItems() {
-        Publishers.CombineLatest(selectedItemType, displayType)
+        actionSheetButtonTap
             .map(logic.getItemInputItems)
-            .assignNoRetain(to: \.detailItems, on: self)
+            .assignNoRetain(to: \.items, on: self)
             .store(in: &cancellables)
     }
     
-    private func bindBarButtonActionType() {
-        displayType
-            .map(logic.getButtonActionType)
-            .assignNoRetain(to: \.barButtonActionType, on: self)
+    /// Binding reloading when action sheet button is tapped.
+    private func bindShouldRefresh() {
+        actionSheetButtonTap
+            .map { _ in true }
+            .assignNoRetain(to: \.shouldRefresh, on: self)
             .store(in: &cancellables)
     }
     
-    private func bindBottomButtonTitle() {
-        displayType
-            .map(logic.getBottomButtonTitle)
-            .assignNoRetain(to: \.bottomButtonTitle, on: self)
-            .store(in: &cancellables)
-    }
-    
-    private func bindBarButtonTitle() {
-        displayType
-            .map(logic.getBarButtonTitle)
-            .assignNoRetain(to: \.barButtonTitle, on: self)
-            .store(in: &cancellables)
-    }
-    
+    /// Accumulated current input items. To be reset when action sheet button is tapped.
     private var currentUserInputItems: AnyPublisher<([UserInputItem], ItemType), Never> {
-        Publishers.CombineLatest(userInputItem, selectedItemType)
+        Publishers.CombineLatest(userInputItem, actionSheetButtonTap)
             .scan(([UserInputItem](), ItemType.password)) { [unowned self] last, current in self.logic.getCurrentUserInputItems(last: last, current: current) }
             .eraseToAnyPublisher()
     }
     
-    private var bottomButtonEnabledForAdd: AnyPublisher<Bool, Never> {
+    /// Binding current input items for bottom button enabled.
+    private func bindAddButtonEnabled() {
         currentUserInputItems
             .map(logic.getBottomButtonEnabledForAdd)
-            .eraseToAnyPublisher()
-    }
-    
-    private var bottomButtonEnabledForCurrentMode: AnyPublisher<Bool, Never> {
-        displayType.filter { $0 == .current }.map { _ in true }.eraseToAnyPublisher()
-    }
-    
-    private func bindBottomButtonEnabled() {
-        Publishers.Merge(bottomButtonEnabledForAdd, bottomButtonEnabledForCurrentMode)
-            .assignNoRetain(to: \.bottomButtonEnabled, on: self)
+            .assignNoRetain(to: \.addButtonEnabled, on: self)
             .store(in: &cancellables)
     }
     
+    /// Current KeepItems
     private var currentKeepItems: AnyPublisher<[KeepItem], Never> {
         currentUserInputItems
             .map(logic.createCurrentKeepItem)
-            .withLatestFrom(savedItems)
+            .withLatestFrom(savedKeepItems)
             .map { [$0] + $1 }
             .eraseToAnyPublisher()
     }
 
     // MARK: - Keychain operations
-    private var savedItems: AnyPublisher<[KeepItem], Never> {
+    /// Currently saved KeepItems in Keychain
+    private var savedKeepItems: AnyPublisher<[KeepItem], Never> {
         keychainService.loadData(forKey: keepKey)
             .catch { [weak self] error -> AnyPublisher<[KeepItem], Never> in
                 switch error {
-                case .unexpectedError: self?.error = .unexpectedError
                 case .noItem: return Just([]).eraseToAnyPublisher()
-                case .generalError(let e): self?.error = .generalError(e)
-                default: break
+                default: self?.error = .keychainError(error)
                 }
                 return .empty()
             }
             .eraseToAnyPublisher()
     }
     
+    /// Binding add button tap to save  user data in Keychain.
     private func bindSaveItem() {
-        bottomButtonTapped
-            .filter(if: displayType.map { $0 == .add })
+        addButtonTapped
             .withLatestFrom(currentKeepItems)
             .flatMap { [unowned self] items in
                 self.keychainService.save(data: items.1, forKey: keepKey)
@@ -159,8 +125,7 @@ final class ItemViewModel: KeychainContainableViewModel {
             .catch { [weak self] error -> AnyPublisher<Void, Never> in
                 switch error {
                 case .duplicatedItem: self?.shouldUpdate.send(())
-                case .noItem, .unexpectedError: self?.error = .unknown
-                case .generalError(let e): self?.error = .generalError(e)
+                default: self?.error = .keychainError(error)
                 }
                 return .empty()
             }
@@ -169,8 +134,10 @@ final class ItemViewModel: KeychainContainableViewModel {
             .store(in: &cancellables)
     }
     
+    /// A subject to be emitted upon getting error of dupliate items.
     private let shouldUpdate = PassthroughSubject<Void, Never>()
     
+    /// Binding update subject to update.
     private func bindUpdate() {
         shouldUpdate
             .withLatestFrom(currentKeepItems)
@@ -186,16 +153,7 @@ final class ItemViewModel: KeychainContainableViewModel {
             .store(in: &cancellables)
     }
     
-    private func bindDeleteItem() {
-        bottomButtonTapped
-            .filter(if: displayType.map { $0 == .current })
-            .sink { items in
-                print("삭제")
-            }
-            .store(in: &cancellables)
-    }
-    
     deinit {
-        print("ItemViewModel deinit")
+        print("AddItemViewModel deinit")
     }
 }
