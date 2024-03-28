@@ -9,16 +9,16 @@ import SwiftUI
 import Combine
 
 struct ItemView: View {
-    // MARK: - init
+    //MARK: - init
     let displayType: ItemDisplayType
     
-    // MARK: - environment
+    //MARK: - environment
     @Environment(\.dismiss) var dismiss
     
-    // MARK: - viewModel
+    //MARK: - viewModel
     @StateObject private var viewModel = ItemViewModel(logic: ItemViewModelLogic())
     
-    // MARK: - states
+    //MARK: - states
     @State private var presentActionSheet = false
     @State private var appeared = false
     @State private var editButtonTap = ""
