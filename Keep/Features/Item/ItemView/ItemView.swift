@@ -9,19 +9,18 @@ import SwiftUI
 import Combine
 
 struct ItemView: View {
-    // init
+    // MARK: - init
     let displayType: ItemDisplayType
     
-    // environment
+    // MARK: - environment
     @Environment(\.dismiss) var dismiss
     
-    // viewModel
-    @StateObject private var viewModel = ItemViewModel()
+    // MARK: - viewModel
+    @StateObject private var viewModel = ItemViewModel(logic: ItemViewModelLogic())
     
-    // states
+    // MARK: - states
     @State private var presentActionSheet = false
     @State private var appeared = false
-    @State private var offset: CGFloat = 0
     @State private var editButtonTap = ""
     @State private var pushToEdit = false
     @State private var selectedInputType: ItemInputType? = nil
@@ -62,7 +61,7 @@ struct ItemView: View {
                 Button(viewModel.bottomButtonTitle) {
                     viewModel.bottomButtonTapped.send()
                 }
-                .foregroundColor(Color(uiColor: displayType == .current ? .systemRed : .systemBlue))
+                .foregroundColor(Color(uiColor: viewModel.bottomButtonColor))
                 .padding()
                 .disabled(!viewModel.bottomButtonEnabled)
                 
@@ -75,8 +74,7 @@ struct ItemView: View {
             }
             .buttonStyle(PlainButtonStyle())
             .padding(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
-            .offset(y: -offset)
-            .animation(.easeOut(duration: 0.16), value: offset)
+            .adjustOffsetbyKeyboardHeight()
         }
         .scrollToDismissKeyboard(mode: .interactively)
         .animation(.easeOut(duration: 0.16), value: appeared)
@@ -134,20 +132,6 @@ struct ItemView: View {
         .onReceive(viewModel.$shouldDismiss) { shouldDismiss in
             if shouldDismiss {
                 dismiss()
-            }
-        }
-        .onReceive(Publishers.keyboardHeight) { height in
-            let isUp = height > 1
-            let setUpOffset = {
-                let keyboardTop = UIScreen.main.bounds.height - height
-                let focusedTextInputBottom = (UIResponder.currentFirstResponder()?.globalFrame?.maxY ?? 0) + 45//20
-                self.offset = max(0, focusedTextInputBottom - keyboardTop)
-            }
-            
-            if isUp {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.16, execute: setUpOffset)
-            } else {
-                setUpOffset()
             }
         }
     }
