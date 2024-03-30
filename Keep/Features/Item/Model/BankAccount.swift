@@ -13,6 +13,6 @@ struct BankAccount: Codable {
     let sortCode: String?
     let accountNumber: String
     let memo: String?
-    let dateCreated: String
-    let dateModified: String?
+    let dateCreated: Date
+    let dateModified: Date?
 }

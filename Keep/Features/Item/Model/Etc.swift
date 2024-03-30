@@ -11,6 +11,6 @@ struct Etc: Codable {
     let id: String
     let title: String
     let memo: String
-    let dateCreated: String
-    let dateModified: String?
+    let dateCreated: Date
+    let dateModified: Date?
 }
