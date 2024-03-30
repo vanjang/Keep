@@ -41,7 +41,7 @@ final class AddItemViewModel: KeychainContainableViewModel {
         bindInputItems()
         bindShouldRefresh()
         bindAddButtonEnabled()
-        bindSaveItem()
+        bindSaveKeepItem()
         bindUpdate()
     }
     
@@ -116,7 +116,7 @@ final class AddItemViewModel: KeychainContainableViewModel {
     }
     
     /// Binding add button tap to save  user data in Keychain.
-    private func bindSaveItem() {
+    private func bindSaveKeepItem() {
         addButtonTapped
             .withLatestFrom(currentKeepItems)
             .flatMap { [unowned self] items in
