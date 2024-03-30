@@ -6,7 +6,23 @@
 //
 
 import SwiftUI
+import UIKit
 import Combine
+
+extension View {
+    /// Applies the given transform if the given condition evaluates to `true`.
+    /// - Parameters:
+    ///   - condition: The condition to evaluate.
+    ///   - transform: The transform to apply to the source `View`.
+    /// - Returns: Either the original `View` or the modified `View` if the condition is `true`.
+    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
+    }
+}
 
 struct ItemDetailView: View {
     //MARK: - init
@@ -14,6 +30,9 @@ struct ItemDetailView: View {
     let inputType: ItemInputType
     let displayType: ItemDisplayType
     let placeholder: String
+    
+    var currentText: String? = nil
+    
     @Binding var refresh: Bool
     @Binding var editButtonTap: String
     @Binding var userInputItem: UserInputItem?
@@ -25,6 +44,9 @@ struct ItemDetailView: View {
     @State private var previousValue: String = ""
     @State private var selectedDate: Date? = nil
     @State private var isShowingDatePicker = false
+    @State private var showToast = false
+//    @State private var isCopyPopupVisible = false
+//        @State private var copiedText: String = ""
 
     //MARK: -
     private let characterLimit = 500
@@ -42,25 +64,126 @@ struct ItemDetailView: View {
                         .background(.white)
                         .cornerRadius(16)
                         .textFieldStyle(PlainTextFieldStyle())
-
+                    // current 모드에서만 되게
+                        .if(displayType == .current, transform: { view in
+                            view
+                                .contextMenu {
+                                Button {
+//                                    print("Pills selected")
+                                    UIPasteboard.general.string = text
+                                    showToast.toggle()
+                                } label: {
+                                    Label("Copy", systemImage: "doc.on.doc")
+                                }
+                                Button {
+//                                    print("Heart selected")
+                                    editButtonTap = itemSubType.rawValue//UUID().uuidString
+                                } label: {
+                                    Label("Edit", systemImage: "pencil")
+                                }
+//                                Button {
+//                                    print("ECG selected")
+//                                } label: {
+//                                    Label("ECG", systemImage: "waveform.path.ecg")
+//                                }
+                            }
+                        })
+                            
+                    
+                    
+//                        .onTapGesture {
+//                            Menu {
+//                                Button(action: {
+//
+//                                }) {
+//                                    Label("Add", systemImage: "plus.circle")
+//                                }
+//                                Button(action: {
+//
+//                                }) {
+//                                    Label("Delete", systemImage: "minus.circle")
+//                                }
+//                                Button(action: {
+//
+//                                }) {
+//                                    Label("Edit", systemImage: "pencil.circle")
+//                                }
+//                            } label: {
+//                                Image(systemName: "ellipsis.circle")
+//                            }
+//                        }
+                    
+                    
+//                }
+//                    .frame(width: 300, height: 300, alignment: .center)
+//                        .onTapGesture {
+//                            // 텍스트를 탭하면 복사 팝업을 보이도록 토글
+//                            isCopyPopupVisible.toggle()
+//                            // 텍스트를 복사
+//                            copiedText = "Hello, World!"
+//                        }
+                    // 클립보드에 텍스트 복사
+//                        .onLongPressGesture {
+//                            UIPasteboard.general.string = copiedText
+//                        }
+//                        .popover(isPresented: $isCopyPopupVisible, arrowEdge: .bottom) {
+//                            // 복사 팝업
+//                            VStack {
+//                                Button(action: {
+//                                    // 클릭하면 팝업이 사라지고 클립보드에 텍스트가 복사됨
+//                                    UIPasteboard.general.string = copiedText
+//                                    isCopyPopupVisible.toggle()
+//                                }) {
+//                                    Text("Copy")
+//                                        .foregroundColor(.blue)
+//                                        .padding(5)
+//                                }
+//                            }
+//                            .padding()
+//                            .background(Color.white)
+//                            .cornerRadius(10)
+//                            .shadow(radius: 5)
+//                        }
+                    /*
+                     TextField
+                     displayType이 .current
+                      -> text가 있을 때: copy icon
+                      -> text가 없을 때: icon 없음
+                     
+                     displayType이 .add
+                     -> text가 있을 때: x icon
+                     -> text가 없을 때: icon 없음
+                     
+                     displayType이 .edit
+                     -> text가 있을 때: x icon
+                     -> text가 없을 때: icon 없음
+                     
+                     
+                     TextEditor
+                     
+                     */
+                    if displayType == .add && !text.isEmpty {
                     Button(action: {
                         text = ""
                     }) {
-                        if displayType == .current && !text.isEmpty {
-                            Image(systemName: "doc.on.doc")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 17, height: 17)
-                                .foregroundColor(Color(uiColor: .systemBlue))
-                        } else if !text.isEmpty {
+//                        if displayType == .current && !text.isEmpty {
+//                            Image(systemName: "doc.on.doc")
+//                                .resizable()
+//                                .scaledToFit()
+//                                .frame(width: 17, height: 17)
+//                                .foregroundColor(Color(uiColor: .systemBlue))
+//                        } else
+//                        if displayType == .add && !text.isEmpty {
                             Image(systemName: "x.circle")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 17, height: 17)
                                 .foregroundColor(Color(uiColor: .systemBlue))
-                        }
+//                        }
                     }
                     .padding(.trailing, 8)
+                    }
+                    
                 case .multiLine:
                     ZStack(alignment: .topLeading) {
                         VStack {
@@ -126,13 +249,14 @@ struct ItemDetailView: View {
                     Button(action: {
                         text = ""
                     }) {
-                        if displayType == .current && !text.isEmpty {
-                            Image(systemName: "doc.on.doc")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 17, height: 17)
-                                .foregroundColor(Color(uiColor: .systemBlue))
-                        } else if !text.isEmpty {
+//                        if displayType == .current && !text.isEmpty {
+//                            Image(systemName: "doc.on.doc")
+//                                .resizable()
+//                                .scaledToFit()
+//                                .frame(width: 17, height: 17)
+//                                .foregroundColor(Color(uiColor: .systemBlue))
+//                        } else
+                        if !text.isEmpty {
                             Image(systemName: "x.circle")
                                 .resizable()
                                 .scaledToFit()
@@ -212,6 +336,11 @@ struct ItemDetailView: View {
         }
         .onChange(of: refresh) { newValue in
             text = ""
+        }
+        .onAppear {
+            if let currentText = currentText {
+                text = currentText
+            }
         }
     }
 }

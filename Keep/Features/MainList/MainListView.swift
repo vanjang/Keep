@@ -28,7 +28,7 @@ struct MainListView: View {
     }
     
     var body: some View {
-        TransparenNavigationView {
+        NavigationView {
             List(viewModel.items, id: \.self) { item in
                 MainRowView(title: item.title)
                     .listRowSeparator(.hidden)

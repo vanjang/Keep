@@ -11,9 +11,7 @@ import XCTest
 final class ItemViewModelTests: XCTestCase {
 
     override func setUpWithError() throws {
-        let vm = ItemViewModel(logic: ItemViewModelLogic())
-        //'shouldUpdate' is inaccessible due to 'private' protection level
-        vm.shouldUpdate
+        let vm = AddItemViewModel(logic: ItemViewModelLogic())
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 

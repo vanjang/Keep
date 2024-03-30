@@ -103,18 +103,16 @@ struct CurrentItemView: View {
                                 .foregroundColor(Color(uiColor: .systemBlue))
                         },
                     trailing:
-                        HStack(content: {
-                            Button(action: {
-                                switch viewModel.barButtonActionType {
-                                case .edit: viewModel.displayType.send(.edit)
-                                case .current: viewModel.displayType.send(.current)
-                                default: break
-                                }
-                            }) {
-                                Text(viewModel.barButtonTitle)
-                                    .foregroundColor(Color(uiColor: .systemBlue))
+                        Button(action: {
+                            switch viewModel.barButtonActionType {
+                            case .edit: viewModel.displayType.send(.edit)
+                            case .current: viewModel.displayType.send(.current)
+                            default: break
                             }
-                        })
+                        }) {
+                            Text(viewModel.barButtonTitle)
+                                .foregroundColor(Color(uiColor: .systemBlue))
+                        }
                 )
                 .onAppear {
                     viewModel.displayType.send(.current)
@@ -129,7 +127,7 @@ struct CurrentItemView: View {
     
     private var scrollView: some View {
         ScrollView {
-            VStack(spacing: 24) {
+            VStack(spacing: 14) {
                 ForEach(viewModel.items, id: \.self) { item in
                     VStack(alignment: .leading, spacing: 6) {
                         Text(item.placeholder)
