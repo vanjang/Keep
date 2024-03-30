@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct CurrentInfoItem: Hashable {
+    let title: String
+    let content: String
+}
