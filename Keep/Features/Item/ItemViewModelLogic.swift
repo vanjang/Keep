@@ -12,33 +12,123 @@ struct ItemViewModelLogic {
         [.password, .bankAccount, .card, .etc].filter { $0 != itemType }
     }
     
-    func getBottomButtonColor(displayType: ItemDisplayType) -> UIColor {
-        displayType == .current ? .systemRed : .systemBlue
+    func getBottomOffset(displayType: ItemDisplayType) -> CGFloat {
+        isInfoButonHidden(displayType: displayType) ? 0 : 50
+    }
+    
+    func isInfoButonHidden(displayType: ItemDisplayType) -> Bool {
+        displayType != .current
+    }
+    
+    func getKeepItem(from keepItems: [KeepItem], keepItemId: String) -> KeepItem? {
+        guard let keepItem = keepItems.first(where: { keepItem in
+            keepItem.id == keepItemId
+        }) else {
+            return nil
+        }
+        return keepItem
+    }
+    
+    func getCurrentInfoItem(from keepItems: [KeepItem], keepItemId: String) -> [CurrentInfoItem] {
+        guard let keepItem = getKeepItem(from: keepItems, keepItemId: keepItemId) else { return [] }
+        let dateCreated = CurrentInfoItem(title: "Created Date", content: DateFormatter.getDiplayTimeString(timeInterval: keepItem.dateCreated.timeIntervalSince1970))
+        var infoItems: [CurrentInfoItem] = [dateCreated]
+        
+        if let dateModified = keepItem.dateModified {
+            let dateModified = CurrentInfoItem(title: "Modified Date", content: DateFormatter.getDiplayTimeString(timeInterval: dateModified.timeIntervalSince1970))
+            infoItems.append(dateModified)
+        }
+        return infoItems
+    }
+    
+    func getCurrentItems(from keepItems: [KeepItem], keepItemId: String, displayType: ItemDisplayType) -> [CurrentItem] {
+        guard let keepItem = getKeepItem(from: keepItems, keepItemId: keepItemId) else { return [] }
+        switch keepItem {
+        case .password(let password): return getPasswordCurrentItems(from: password, displayType: displayType)
+        case .card(let card): return getCardCurrentItems(from: card, displayType: displayType)
+        case .bankAccount(let bankAccount): return getBankAccountCurrentItems(from: bankAccount, displayType: displayType)
+        case .etc(let etc): return getEtcCurrentItems(from: etc, displayType: displayType)
+        }
+    }
+    
+    func getPasswordCurrentItems(from password: Password, displayType: ItemDisplayType) -> [CurrentItem] {
+        let id = password.id
+        let title = password.title
+        let email = password.email
+        let username = password.username
+        let pw = password.password
+        let memo = password.memo
+        
+        return [CurrentItem(id: id, itemSubType: .title, inputType: .plain, displayType: displayType, text: title, placeholder: ItemSubType.title.rawValue, isOptional: false),
+                CurrentItem(id: id, itemSubType: .email, inputType: .plain, displayType: displayType, text: email, placeholder: ItemSubType.email.rawValue + "(optional)", isOptional: true),
+                CurrentItem(id: id, itemSubType: .username, inputType: .plain, displayType: displayType, text: username, placeholder: ItemSubType.username.rawValue + "(optional)", isOptional: true),
+                CurrentItem(id: id, itemSubType: .password, inputType: .plain, displayType: displayType, text: pw, placeholder: ItemSubType.password.rawValue, isOptional: false),
+                CurrentItem(id: id, itemSubType: .memo, inputType: .multiLine, displayType: displayType, text: memo, placeholder: ItemSubType.memo.rawValue + "(optional)", isOptional: true)].filter { displayType == .edit ? true : $0.text != nil }
+        
+    }
+    
+    private func getCardCurrentItems(from card: Card, displayType: ItemDisplayType) -> [CurrentItem] {
+        let id = card.id
+        let title = card.title
+        let longNumber = card.longNumber
+        let dateStartingFrom = card.dateStartingFrom
+        let dateEndingBy = card.dateEndingBy
+        let securityCode = card.securityCode
+        let memo = card.memo
+        
+        return [CurrentItem(id: id, itemSubType: .title, inputType: .plain, displayType: displayType, text: title, placeholder: ItemSubType.title.rawValue, isOptional: false),
+                CurrentItem(id: id, itemSubType: .longNumber, inputType: .longNumber, displayType: displayType, text: longNumber, placeholder: ItemSubType.longNumber.rawValue, isOptional: false),
+                CurrentItem(id: id, itemSubType: .startFrom, inputType: .plain, displayType: displayType, text: dateStartingFrom, placeholder: ItemSubType.startFrom.rawValue + "(optional)", isOptional: true),
+                CurrentItem(id: id, itemSubType: .expireBy, inputType: .plain, displayType: displayType, text: dateEndingBy, placeholder: ItemSubType.expireBy.rawValue + "(optional)", isOptional: true),
+                CurrentItem(id: id, itemSubType: .securityCode, inputType: .plain, displayType: displayType, text: securityCode, placeholder: ItemSubType.securityCode.rawValue + "(optional)", isOptional: true),
+                CurrentItem(id: id, itemSubType: .memo, inputType: .multiLine, displayType: displayType, text: memo, placeholder: ItemSubType.memo.rawValue + "(optional)", isOptional: true)].filter { displayType == .edit ? true : $0.text != nil }
+    }
+    
+    private func getBankAccountCurrentItems(from bankAccount: BankAccount, displayType: ItemDisplayType) -> [CurrentItem] {
+        let id = bankAccount.id
+        let title = bankAccount.title
+        let sortCode = bankAccount.sortCode
+        let accountNumber = bankAccount.accountNumber
+        let memo = bankAccount.memo
+        
+        return [CurrentItem(id: id, itemSubType: .title, inputType: .plain, displayType: displayType, text: title, placeholder: ItemSubType.title.rawValue, isOptional: false),
+            CurrentItem(id: id, itemSubType: .accountNumber, inputType: .plain, displayType: displayType, text: accountNumber, placeholder: ItemSubType.accountNumber.rawValue, isOptional: false),
+            CurrentItem(id: id, itemSubType: .sortCode, inputType: .plain, displayType: displayType, text: sortCode, placeholder: ItemSubType.sortCode.rawValue + "(optional)", isOptional: true),
+            CurrentItem(id: id, itemSubType: .memo, inputType: .multiLine, displayType: displayType, text: memo, placeholder: ItemSubType.memo.rawValue + "(optional)", isOptional: true)].filter { displayType == .edit ? true : $0.text != nil }
+    }
+    
+    private func getEtcCurrentItems(from etc: Etc, displayType: ItemDisplayType) -> [CurrentItem] {
+        let id = etc.id
+        let title = etc.title
+        let memo = etc.memo
+        
+        return [CurrentItem(id: id, itemSubType: .title, inputType: .plain, displayType: displayType, text: title, placeholder: ItemSubType.title.rawValue, isOptional: false),
+            CurrentItem(id: id, itemSubType: .memo, inputType: .multiLine, displayType: displayType, text: memo, placeholder: ItemSubType.memo.rawValue, isOptional: false)]
     }
 
-    func getItemInputItems(type: ItemType, displayType: ItemDisplayType) -> [ItemInputItem] {
+    func getItemInputItems(type: ItemType) -> [AddItem] {
         switch type {
         case .password:
-            return [ItemInputItem(itemSubType: .title, inputType: .plain, displayType: displayType, placeholder: ItemSubType.title.rawValue, isOptional: false),
-                    ItemInputItem(itemSubType: .email, inputType: .plain, displayType: displayType, placeholder: ItemSubType.email.rawValue + "(optional)", isOptional: true),
-                    ItemInputItem(itemSubType: .username, inputType: .plain, displayType: displayType, placeholder: ItemSubType.username.rawValue + "(optional)", isOptional: true),
-                    ItemInputItem(itemSubType: .password, inputType: .plain, displayType: displayType, placeholder: ItemSubType.password.rawValue, isOptional: false),
-                    ItemInputItem(itemSubType: .memo, inputType: .multiLine, displayType: displayType, placeholder: ItemSubType.memo.rawValue + "(optional)", isOptional: true)]
+            return [AddItem(itemSubType: .title, inputType: .plain, placeholder: ItemSubType.title.rawValue, isOptional: false),
+                    AddItem(itemSubType: .email, inputType: .plain, placeholder: ItemSubType.email.rawValue + "(optional)", isOptional: true),
+                    AddItem(itemSubType: .username, inputType: .plain, placeholder: ItemSubType.username.rawValue + "(optional)", isOptional: true),
+                    AddItem(itemSubType: .password, inputType: .plain, placeholder: ItemSubType.password.rawValue, isOptional: false),
+                    AddItem(itemSubType: .memo, inputType: .multiLine, placeholder: ItemSubType.memo.rawValue + "(optional)", isOptional: true)]
         case .bankAccount:
-            return [ItemInputItem(itemSubType: .title, inputType: .plain, displayType: displayType, placeholder: ItemSubType.title.rawValue, isOptional: false),
-                    ItemInputItem(itemSubType: .sortCode, inputType: .plain, displayType: displayType, placeholder: ItemSubType.sortCode.rawValue + "(optional)", isOptional: true),
-                    ItemInputItem(itemSubType: .accountNumber, inputType: .plain, displayType: displayType, placeholder: ItemSubType.accountNumber.rawValue, isOptional: false),
-                    ItemInputItem(itemSubType: .memo, inputType: .multiLine, displayType: displayType, placeholder: ItemSubType.memo.rawValue + "(optional)", isOptional: true)]
+            return [AddItem(itemSubType: .title, inputType: .plain, placeholder: ItemSubType.title.rawValue, isOptional: false),
+                    AddItem(itemSubType: .sortCode, inputType: .plain, placeholder: ItemSubType.sortCode.rawValue + "(optional)", isOptional: true),
+                    AddItem(itemSubType: .accountNumber, inputType: .plain, placeholder: ItemSubType.accountNumber.rawValue, isOptional: false),
+                    AddItem(itemSubType: .memo, inputType: .multiLine, placeholder: ItemSubType.memo.rawValue + "(optional)", isOptional: true)]
         case .card:
-            return [ItemInputItem(itemSubType: .title, inputType: .plain, displayType: displayType, placeholder: ItemSubType.title.rawValue, isOptional: false),
-                    ItemInputItem(itemSubType: .longNumber, inputType: .longNumber, displayType: displayType, placeholder: ItemSubType.longNumber.rawValue, isOptional: false),
-                    ItemInputItem(itemSubType: .startFrom, inputType: .date, displayType: displayType, placeholder: ItemSubType.startFrom.rawValue + "(optional)", isOptional: true),
-                    ItemInputItem(itemSubType: .expireBy, inputType: .date, displayType: displayType, placeholder: ItemSubType.expireBy.rawValue + "(optional)", isOptional: true),
-                    ItemInputItem(itemSubType: .securityCode, inputType: .plain, displayType: displayType, placeholder: ItemSubType.securityCode.rawValue + "(optional)", isOptional: true),
-                    ItemInputItem(itemSubType: .memo, inputType: .multiLine, displayType: displayType, placeholder: ItemSubType.memo.rawValue + "(optional)", isOptional: true)]
+            return [AddItem(itemSubType: .title, inputType: .plain, placeholder: ItemSubType.title.rawValue, isOptional: false),
+                    AddItem(itemSubType: .longNumber, inputType: .longNumber, placeholder: ItemSubType.longNumber.rawValue, isOptional: false),
+                    AddItem(itemSubType: .startFrom, inputType: .date, placeholder: ItemSubType.startFrom.rawValue + "(optional)", isOptional: true),
+                    AddItem(itemSubType: .expireBy, inputType: .date, placeholder: ItemSubType.expireBy.rawValue + "(optional)", isOptional: true),
+                    AddItem(itemSubType: .securityCode, inputType: .plain, placeholder: ItemSubType.securityCode.rawValue + "(optional)", isOptional: true),
+                    AddItem(itemSubType: .memo, inputType: .multiLine, placeholder: ItemSubType.memo.rawValue + "(optional)", isOptional: true)]
         case .etc:
-            return [ItemInputItem(itemSubType: .title, inputType: .plain, displayType: displayType, placeholder: ItemSubType.title.rawValue, isOptional: false),
-                    ItemInputItem(itemSubType: .memo, inputType: .multiLine, displayType: displayType, placeholder: ItemSubType.memo.rawValue, isOptional: false)]
+            return [AddItem(itemSubType: .title, inputType: .plain, placeholder: ItemSubType.title.rawValue, isOptional: false),
+                    AddItem(itemSubType: .memo, inputType: .multiLine, placeholder: ItemSubType.memo.rawValue, isOptional: false)]
         }
     }
     
@@ -50,19 +140,11 @@ struct ItemViewModelLogic {
         }
     }
     
-    func getBottomButtonTitle(displayType: ItemDisplayType) -> String {
+    func getCurrentItemViewBarButtonTitle(displayType: ItemDisplayType) -> String {
         switch displayType {
-        case .add: return "Add"
-        case .current: return "Delete"
-        case .edit: return ""
-        }
-    }
-    
-    func getBarButtonTitle(displayType: ItemDisplayType) -> String {
-        switch displayType {
-        case .add: return "Change"
         case .current: return "Edit"
         case .edit: return "Cancel"
+        default: return ""
         }
     }
     
@@ -113,7 +195,7 @@ struct ItemViewModelLogic {
         let username = inputItems.first { $0.itemSubType == .username }?.text
         let password = inputItems.first { $0.itemSubType == .password }?.text ?? ""
         let memo = inputItems.first { $0.itemSubType == .memo }?.text
-        return .password(Password(id: Helpers.randomString(), title: title, email: email, username: username, password: password, memo: memo, dateCreated: "", dateModified: nil))
+        return .password(Password(id: Helpers.randomString(), title: title, email: email, username: username, password: password, memo: memo, dateCreated: Date(), dateModified: nil))
     }
     
     func createBankAccount(from inputItems: [UserInputItem]) -> KeepItem {
@@ -121,7 +203,7 @@ struct ItemViewModelLogic {
         let sortCode = inputItems.first { $0.itemSubType == .sortCode }?.text
         let accountNumber = inputItems.first { $0.itemSubType == .accountNumber }?.text ?? ""
         let memo = inputItems.first { $0.itemSubType == .memo }?.text
-        return .bankAccount(BankAccount(id: Helpers.randomString(), title: title, sortCode: sortCode, accountNumber: accountNumber, memo: memo, dateCreated: "", dateModified: nil))
+        return .bankAccount(BankAccount(id: Helpers.randomString(), title: title, sortCode: sortCode, accountNumber: accountNumber, memo: memo, dateCreated: Date(), dateModified: nil))
     }
     
     func createCard(from inputItems: [UserInputItem]) -> KeepItem {
@@ -131,14 +213,13 @@ struct ItemViewModelLogic {
         let dateEndingBy = inputItems.first { $0.itemSubType == .expireBy }?.text
         let securityCode = inputItems.first { $0.itemSubType == .securityCode }?.text
         let memo = inputItems.first { $0.itemSubType == .memo }?.text
-        return .card(Card(id: Helpers.randomString(), title: title, longNumber: longNumber, dateStartingFrom: dateStartingFrom, dateEndingBy: dateEndingBy, securityCode: securityCode, memo: memo, dateCreated: "", dateModified: nil))
+        return .card(Card(id: Helpers.randomString(), title: title, longNumber: longNumber, dateStartingFrom: dateStartingFrom, dateEndingBy: dateEndingBy, securityCode: securityCode, memo: memo, dateCreated: Date(), dateModified: nil))
     }
     
     private func createEtc(from inputItems: [UserInputItem]) -> KeepItem {
         let title = inputItems.first { $0.itemSubType == .title }?.text ?? ""
         let memo = inputItems.first { $0.itemSubType == .memo }?.text ?? ""
-        return .etc(Etc(id: Helpers.randomString(), title: title, memo: memo, dateCreated: "", dateModified: nil))
+        return .etc(Etc(id: Helpers.randomString(), title: title, memo: memo, dateCreated: Date(), dateModified: nil))
     }
-    
 }
 
