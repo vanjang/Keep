@@ -40,7 +40,7 @@ struct MainListView: View {
                     .listRowBackground(Color.mainGray)
             }
             .fullScreenCover(item: $selectedItem, content: { item in
-                ItemView(displayType: .current)
+                CurrentItemView(id: item.id, itemType: item.itemType)
             })
             .listStyle(PlainListStyle())
             .background(Color.mainGray)
@@ -62,7 +62,7 @@ struct MainListView: View {
                         .foregroundColor(Color(uiColor: UIColor.systemBlue))
                 }
                 .fullScreenCover(isPresented: $presentAddItemView) {
-                    ItemView(displayType: .add)
+                    AddItemView()
                 }
                 
                 Button {

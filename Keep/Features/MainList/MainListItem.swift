@@ -8,6 +8,7 @@
 import Foundation
 
 struct MainListItem: Identifiable, Hashable {
-    let id = UUID()
+    let id: String
     let title: String
+    let itemType: ItemType
 }

@@ -43,13 +43,13 @@ final class MainListViewModel: KeychainContainableViewModel {
                 $0.map { keepItem -> MainListItem in
                     switch keepItem {
                     case .password(let pw):
-                        return MainListItem(title: pw.title)
+                        return MainListItem(id: pw.id, title: pw.title, itemType: .password)
                     case .card(let card):
-                        return MainListItem(title: card.title)
+                        return MainListItem(id: card.id, title: card.title, itemType: .card)
                     case .bankAccount(let account):
-                        return MainListItem(title: account.title)
+                        return MainListItem(id: account.id, title: account.title, itemType: .bankAccount)
                     case .etc(let etc):
-                        return MainListItem(title: etc.title)
+                        return MainListItem(id: etc.id, title: etc.title, itemType: .etc)
                     }
                 }
             }
