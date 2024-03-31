@@ -8,16 +8,16 @@
 import SwiftUI
 
 struct MainListView: View {
-    // viewModel
+    // MARK: - viewModel
     @StateObject private var viewModel = MainListViewModel()
     
-    // states
+    // MARK: - states
     @State private var selectedItem: MainListItem?
     @State private var presentAddItemView = false
     @State private var presentSettingsView = false
     @State private var searchText = ""
     
-    //
+    // MARK: -
     @EnvironmentObject var authManager: AuthManager
 
     init(searchText: String = "") {
