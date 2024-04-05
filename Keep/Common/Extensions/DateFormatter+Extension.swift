@@ -16,7 +16,7 @@ extension DateFormatter {
         
         var toString: String {
             switch self {
-            case .dateAndTime: return "yyyy. M. d. HH:mm"
+            case .dateAndTime: return "dd MMM yyyy HH:mm"
             case .time: return "HH:mm"
             case .yesterday: return "Yesterday"
             case .dateAndMonth: return isKorea ? "M. d." : "MMMd"
@@ -43,16 +43,19 @@ extension DateFormatter {
      template https://stackoverflow.com/questions/55091213/what-are-the-format-specifiers-allowed-in-ios-dateformatter-dateformat-fromtempl/55093100#55093100
      */
     static func getDiplayTimeString(timeInterval: TimeInterval, preferredFormat: TimeFormat? = nil) -> String {
-        let chatDate = Date.getDate(from: timeInterval)
+        getDiplayTimeString(date: Date.getDate(from: timeInterval), preferredFormat: preferredFormat)
+    }
+    
+    static func getDiplayTimeString(date: Date, preferredFormat: TimeFormat? = nil) -> String {
         var format = ""
         
         if let preferred = preferredFormat {
             format = preferred.toString
-        } else if chatDate.isInYesterday {
+        } else if date.isInYesterday {
             return TimeFormat.yesterday.toString
-        } else if chatDate.isInToday {
+        } else if date.isInToday {
             format = TimeFormat.time.toString
-        } else if chatDate.isInThisYear {
+        } else if date.isInThisYear {
             format = TimeFormat.dateAndMonth.toString
         } else {
             format = TimeFormat.dateMonthAndYear.toString
@@ -64,6 +67,6 @@ extension DateFormatter {
             formatter.setLocalizedDateFormatFromTemplate(format)
         }
         
-        return formatter.string(from: chatDate).replacingOccurrences(of: ",", with: ".")
+        return formatter.string(from: date).replacingOccurrences(of: ",", with: ".")
     }
 }

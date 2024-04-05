@@ -39,3 +39,12 @@ extension Date {
         Date().timeIntervalSince1970 * 1000
     }
 }
+
+extension Date {
+    func toISOString(with options: ISO8601DateFormatter.Options = [.withInternetDateTime]) -> String {
+        let dateFormatter = ISO8601DateFormatter()
+        dateFormatter.formatOptions = options
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return dateFormatter.string(from: self)
+    }
+}
