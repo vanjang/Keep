@@ -17,33 +17,22 @@ struct DateInputView: InputViewType, View {
     let canPresentMenu: Bool
     @Binding var refresh: Bool
     var inputText: (String) -> Void
-
+    
     //MARK: - States
     @State var text: String = ""
     @State private var selectedDate: Date? = nil
     @State private var isShowingDatePicker = false
+    @State private var dateString: String? = nil
+    
     var body: some View {
         HStack {
             ZStack(alignment: .trailing) {
-                let dateString = selectedDate?.formatted(date: .long, time: .omitted)
-                
                 Text(dateString ?? placeholder)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(selectedDate != nil ? .black : Color(uiColor: .placeholderText))
                     .padding()
                     .padding(.trailing, 20)
                     .background(.white)
-                    .overlay(content: {
-                        GeometryReader { geometry in
-                            Rectangle()
-                                .foregroundColor(.clear)
-                                .contentShape(Rectangle())
-                                .frame(width: geometry.size.width * 0.8, height: geometry.size.height)
-                                .onTapGesture {
-                                    isShowingDatePicker.toggle()
-                                }
-                        }
-                    })
                     .cornerRadius(16)
                     .fullScreenCover(isPresented: $isShowingDatePicker, content: {
                         DatePickerView(selectedDate: $selectedDate, isPresented: $isShowingDatePicker)
@@ -55,7 +44,7 @@ struct DateInputView: InputViewType, View {
                     .contextMenu {
                         if canPresentMenu {
                             Button {
-                                UIPasteboard.general.string = text
+                                UIPasteboard.general.string = dateString
                             } label: {
                                 Label("Copy", systemImage: "doc.on.doc")
                             }
@@ -63,7 +52,24 @@ struct DateInputView: InputViewType, View {
                             EmptyView()
                         }
                     }
+                
+                if canDelete && !(dateString ?? "").isEmpty {
+                    Button(action: {
+                        selectedDate = nil
+                    }) {
+                        Image(systemName: "x.circle")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 17, height: 17)
+                            .foregroundColor(Color(uiColor: .systemBlue))
+                    }
+                    .padding(.trailing, 12)
+                }
             }
+            .onTapGesture {
+                isShowingDatePicker.toggle()
+            }
+            
             if canEdit {
                 Image(systemName: "chevron.right")
                     .resizable()
@@ -72,11 +78,15 @@ struct DateInputView: InputViewType, View {
                     .foregroundColor(Color(uiColor: .systemBlue))
             }
         }
-        .onChange(of: text) { newValue in
-            inputText(newValue)
-        }
+        .onChange(of: selectedDate, perform: { newValue in
+            dateString = selectedDate?.formatted(date: .long, time: .omitted)
+            if let d = selectedDate {
+                print("sss", d.toISOString())
+                inputText(d.toISOString())
+            }
+        })
         .onChange(of: refresh) { newValue in
-            text = ""
+            dateString = nil
         }
         .onAppear {
             if let currentText = currentText {
@@ -85,3 +95,4 @@ struct DateInputView: InputViewType, View {
         }
     }
 }
+
