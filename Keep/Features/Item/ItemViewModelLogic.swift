@@ -31,11 +31,11 @@ struct ItemViewModelLogic {
     
     func getCurrentInfoItem(from keepItems: [KeepItem], keepItemId: String) -> [CurrentInfoItem] {
         guard let keepItem = getKeepItem(from: keepItems, keepItemId: keepItemId) else { return [] }
-        let dateCreated = CurrentInfoItem(title: "Created Date", content: DateFormatter.getDiplayTimeString(timeInterval: keepItem.dateCreated.timeIntervalSince1970))
+        let dateCreated = CurrentInfoItem(title: "Created Date", content: DateFormatter.getDiplayTimeString(date: keepItem.dateCreated, preferredFormat: .dateAndTime))
         var infoItems: [CurrentInfoItem] = [dateCreated]
         
         if let dateModified = keepItem.dateModified {
-            let dateModified = CurrentInfoItem(title: "Modified Date", content: DateFormatter.getDiplayTimeString(timeInterval: dateModified.timeIntervalSince1970))
+            let dateModified = CurrentInfoItem(title: "Modified Date", content: DateFormatter.getDiplayTimeString(date: dateModified))
             infoItems.append(dateModified)
         }
         return infoItems
@@ -71,8 +71,8 @@ struct ItemViewModelLogic {
         let id = card.id
         let title = card.title
         let longNumber = card.longNumber
-        let dateStartingFrom = card.dateStartingFrom
-        let dateEndingBy = card.dateEndingBy
+        let dateStartingFrom = DateFormatter.getDiplayTimeString(date: card.dateStartingFrom?.toDate() ?? Date(), preferredFormat: .dateMonthAndYear)
+        let dateEndingBy = DateFormatter.getDiplayTimeString(date: card.dateEndingBy?.toDate() ?? Date(), preferredFormat: .dateMonthAndYear)
         let securityCode = card.securityCode
         let memo = card.memo
         
