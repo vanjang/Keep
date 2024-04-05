@@ -19,6 +19,7 @@ struct CurrentItemView: View {
     @State private var refresh = false
     @State private var showInfoSheet = false
     @State private var showDeleteAlert = false
+    @State private var showToast: Bool = false
     
     /// KeepItem ID
     init(id: String, itemType: ItemType) {
@@ -81,6 +82,7 @@ struct CurrentItemView: View {
                 )
             }
         }
+        .toast(message: "Copied", isShowing: $showToast, duration: 2.0)
         .onAppear {
             viewModel.displayType.send(.current)
         }
@@ -158,6 +160,9 @@ struct CurrentItemView: View {
             
             itemDetailView(item: item)
             .frame(minHeight: 50)
+            .onTapGesture {
+                showToast.toggle()
+            }
         }
     }
     

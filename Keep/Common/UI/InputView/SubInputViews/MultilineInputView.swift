@@ -44,15 +44,9 @@ struct MultilineInputView: InputViewType, View {
                                     text = String(newText.prefix(characterLimit))
                                 }
                             }
-                            .onTapGesture {
-                                didBeginEditing = true
-                            }
                             .onReceive(Publishers.keyboardHeight) { height in
                                 let keyboardUp = height > 0
-                                
-                                if !keyboardUp {
-                                    didBeginEditing = false
-                                }
+                                didBeginEditing = keyboardUp
                                 isEditing = keyboardUp && didBeginEditing
                             }
                             .contextMenu {
