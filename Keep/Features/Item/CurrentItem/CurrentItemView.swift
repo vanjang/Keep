@@ -16,10 +16,6 @@ struct CurrentItemView: View {
     @StateObject private var viewModel: CurrentItemViewModel
     
     //MARK: - states
-    @State private var editButtonTap = ""
-    @State private var pushToEdit = false
-    @State private var selectedInputType: ItemInputType? = nil
-    @State private var selectedInputField: String = ""
     @State private var refresh = false
     @State private var showInfoSheet = false
     @State private var showDeleteAlert = false
@@ -85,6 +81,14 @@ struct CurrentItemView: View {
                 )
             }
         }
+        .onAppear {
+            viewModel.displayType.send(.current)
+        }
+        .onReceive(viewModel.$shouldDismiss) { shouldDismiss in
+            if shouldDismiss {
+                dismiss()
+            }
+        }
         .background(Color(uiColor: .mainGray))
     }
     
@@ -114,14 +118,6 @@ struct CurrentItemView: View {
                                 .foregroundColor(Color(uiColor: .systemBlue))
                         }
                 )
-                .onAppear {
-                    viewModel.displayType.send(.current)
-                }
-                .onReceive(viewModel.$shouldDismiss) { shouldDismiss in
-                    if shouldDismiss {
-                        dismiss()
-                    }
-                }
         }
     }
     
@@ -129,44 +125,57 @@ struct CurrentItemView: View {
         ScrollView {
             VStack(spacing: 14) {
                 ForEach(viewModel.items, id: \.self) { item in
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(item.placeholder)
-                            .padding(.leading, 6)
-                            .foregroundColor(Color(uiColor: .lightGray))
-                            .font(.system(size: 14, weight: .medium))
-                        
-                        ItemDetailView(itemSubType: item.itemSubType,
-                                       inputType: item.inputType,
-                                       displayType: item.displayType,
-                                       placeholder: "",
-                                       currentText: item.text,
-                                       refresh: $refresh,
-                                       editButtonTap: $editButtonTap,
-                                       userInputItem: .constant(nil))
-                        .frame(minHeight: 50)
-                        .onChange(of: editButtonTap) { newValue in
-                            guard newValue == item.itemSubType.rawValue else { return }
-                            selectedInputType = item.inputType
-                            selectedInputField = item.itemSubType.rawValue
-                            // to implement onChange(of:) for the same value of editButtonTap, editButtonTap should be emptied everytime it is called.
-                            editButtonTap = ""
-                            viewModel.displayType.send(.edit)
-                            pushToEdit.toggle()
+                    if item.displayType == .edit {
+                        NavigationLink {
+                            itemEditView(item: item)
+                        } label: {
+                            itemCellView(item: item)
                         }
+                    } else {
+                        itemCellView(item: item)
                     }
                 }
-                
-                NavigationLink(destination: ItemEditView(inputType: selectedInputType ?? .plain,
-                                                         inputField: selectedInputField,
-                                                         userInputItem: .constant(nil)),
-                               isActive: $pushToEdit) {
-                    EmptyView()
-                }.hidden()
             }
             .buttonStyle(PlainButtonStyle())
             .padding(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
         }
         .edgesIgnoringSafeArea(.bottom)
         .background(Color.mainGray)
+    }
+    
+    private func itemEditView(item: CurrentItem) -> some View {
+        ItemEditView(inputType: item.inputType,
+                     inputField: item.text ?? "",
+                     userInputItem: .constant(nil))
+    }
+    
+    private func itemCellView(item: CurrentItem) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(item.placeholder)
+                .padding(.leading, 6)
+                .foregroundColor(Color(uiColor: .lightGray))
+                .font(.system(size: 14, weight: .medium))
+            
+            itemDetailView(item: item)
+            .frame(minHeight: 50)
+        }
+    }
+    
+    private func getInputViewItem(item: CurrentItem) -> InputViewItem {
+        InputViewItem(itemSubType: item.itemSubType,
+                      displayType: item.displayType,
+                      placeholder: item.placeholder,
+                      currentText: item.text,
+                      refresh: $refresh,
+                      inputText: { _ in })
+    }
+    
+    private func itemDetailView(item: CurrentItem) -> some View {
+        switch item.inputType {
+        case .plain: return InputView.plain(getInputViewItem(item: item))
+        case .multiLine: return InputView.multiline(getInputViewItem(item: item))
+        case .longNumber: return InputView.longNumber(getInputViewItem(item: item))
+        case .date: return InputView.date(getInputViewItem(item: item))
+        }
     }
 }

@@ -11,7 +11,6 @@ import Combine
 final class CurrentItemViewModel: KeychainContainableViewModel {
     //MARK: - inputs
     let displayType = PassthroughSubject<ItemDisplayType, Never>()
-    let userInputItem = PassthroughSubject<UserInputItem, Never>()
     let deleteButtonTapped = PassthroughSubject<Void, Never>()
     
     //MARK: - outputs
@@ -24,6 +23,7 @@ final class CurrentItemViewModel: KeychainContainableViewModel {
     @Published private(set) var isInfoButtonHidden = false
     @Published private(set) var bottomOffset: CGFloat = 0
     @Published private(set) var error: KeepError = .none
+    @Published var toEditView = false
     
     //MARK: - Injection
     private let logic: ItemViewModelLogic

@@ -18,7 +18,7 @@ struct AddItemView: View {
     //MARK: - states
     @State private var presentActionSheet = false
     @State private var appeared = false
-    @State private var userInputItem: UserInputItem? = nil
+    @State private var inputText: String = ""
     @State private var refresh = false
     
     var body: some View {
@@ -33,13 +33,7 @@ struct AddItemView: View {
         ScrollView {
             VStack(spacing: 24) {
                 ForEach(viewModel.items, id: \.self) { item in
-                    ItemDetailView(itemSubType: item.itemSubType,
-                                   inputType: item.inputType,
-                                   displayType: .add,
-                                   placeholder: item.placeholder,
-                                   refresh: $refresh,
-                                   editButtonTap: .constant(""),
-                                   userInputItem: $userInputItem)
+                    itemDetailView(item: item)
                     .frame(minHeight: 50)
                 }
                 
@@ -99,12 +93,6 @@ struct AddItemView: View {
                 appeared = true
             }
         }
-        // Send User's input content to VM whenever changed
-        .onChange(of: userInputItem, perform: { newValue in
-            guard let new = newValue else { return }
-            viewModel.userInputItem.send(new)
-        })
-        // ActionSheet has been tapped and empty text in ItemInputView
         .onReceive(viewModel.$shouldRefresh) { _ in
             refresh.toggle()
         }
@@ -112,6 +100,26 @@ struct AddItemView: View {
             if shouldDismiss {
                 dismiss()
             }
+        }
+    }
+    
+    private func getInputViewItem(item: AddItem) -> InputViewItem {
+        InputViewItem(itemSubType: item.itemSubType,
+                      displayType: .add,
+                      placeholder: item.placeholder,
+                      currentText: nil,
+                      refresh: $refresh,
+                      inputText: {
+            viewModel.userInputItem.send(UserInputItem(itemSubType: item.itemSubType, text: $0))
+        })
+    }
+    
+    private func itemDetailView(item: AddItem) -> some View {
+        switch item.inputType {
+        case .plain: return InputView.plain(getInputViewItem(item: item))
+        case .multiLine: return InputView.multiline(getInputViewItem(item: item))
+        case .longNumber: return InputView.longNumber(getInputViewItem(item: item))
+        case .date: return InputView.date(getInputViewItem(item: item))
         }
     }
 }

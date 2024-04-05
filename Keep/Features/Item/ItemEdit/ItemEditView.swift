@@ -22,13 +22,7 @@ struct ItemEditView: View {
     
     var body: some View {
         VStack {
-            ItemDetailView(itemSubType: .none,
-                           inputType: inputType,
-                           displayType: .add,
-                           placeholder: "",
-                           refresh: .constant(false),
-                           editButtonTap: .constant(""),
-                           userInputItem: $userInputItem)
+            itemDetailView()
             .frame(minHeight: 50)
             .padding()
             .focused($focused, equals: true)
@@ -54,6 +48,26 @@ struct ItemEditView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.focused = true
             }
+        }
+    }
+    
+    private func inputViewItem() -> InputViewItem {
+        InputViewItem(itemSubType: .none,
+                      displayType: .add,
+                      placeholder: "",
+                      currentText: inputField,
+                      refresh: .constant(false),
+                      inputText: { inputText in
+            
+        })
+    }
+    
+    private func itemDetailView() -> some View {
+        switch inputType {
+        case .plain: return InputView.plain(inputViewItem())
+        case .multiLine: return InputView.multiline(inputViewItem())
+        case .longNumber: return InputView.longNumber(inputViewItem())
+        case .date: return InputView.date(inputViewItem())
         }
     }
 }
