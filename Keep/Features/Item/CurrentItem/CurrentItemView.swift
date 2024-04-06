@@ -145,6 +145,7 @@ struct CurrentItemView: View {
     
     private func itemEditView(item: CurrentItem) -> some View {
         ItemEditView(inputType: item.inputType,
+                     inputSubType: item.itemSubType,
                      inputField: item.text ?? "",
                      userInputItem: .constant(nil))
     }
@@ -156,7 +157,7 @@ struct CurrentItemView: View {
                 .foregroundColor(Color(uiColor: .lightGray))
                 .font(.system(size: 14, weight: .medium))
             
-            itemDetailView(item: item)
+            inputView(item: item)
             .frame(minHeight: 50)
         }
     }
@@ -170,7 +171,7 @@ struct CurrentItemView: View {
                       inputText: { _ in })
     }
     
-    private func itemDetailView(item: CurrentItem) -> some View {
+    private func inputView(item: CurrentItem) -> some View {
         switch item.inputType {
         case .plain: return InputView.plain(getInputViewItem(item: item))
         case .multiLine: return InputView.multiline(getInputViewItem(item: item))

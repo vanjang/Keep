@@ -10,6 +10,7 @@ import SwiftUI
 struct ItemEditView: View {
     // MARK: - init
     let inputType: ItemInputType
+    let inputSubType: ItemSubType
     let inputField: String
     @Binding var userInputItem: UserInputItem?
     
@@ -26,7 +27,7 @@ struct ItemEditView: View {
             .frame(minHeight: 50)
             .padding()
             .focused($focused, equals: true)
-            .navigationBarTitle("Edit " + inputField)
+            .navigationBarTitle("Edit " + inputSubType.rawValue)
             .navigationBarItems(
                 trailing:
                     Button(action: {
