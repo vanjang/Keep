@@ -25,6 +25,7 @@ struct PlainInputView: InputViewType, View {
         HStack {
             ZStack(alignment: .trailing) {
                 TextField(placeholder, text: $text)
+                    .foregroundColor(disabled ? Color(uiColor: .darkGray) : .black)
                     .multilineTextAlignment(.leading)
                     .padding()
                     .padding(.trailing, 20)

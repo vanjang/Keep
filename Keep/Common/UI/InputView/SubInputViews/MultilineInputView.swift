@@ -33,6 +33,7 @@ struct MultilineInputView: InputViewType, View {
                 ZStack(alignment: .topLeading) {
                     VStack {
                         TextEditor(text: $text)
+                            .foregroundColor(disabled ? Color(uiColor: .darkGray) : .black)
                             .frame(height: isEditing || !text.isEmpty ? 150 : 50)
                             .padding(.horizontal)
                             .padding(.top, 8)

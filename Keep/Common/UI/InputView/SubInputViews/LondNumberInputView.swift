@@ -26,6 +26,7 @@ struct LondNumberInputView: InputViewType, View {
         HStack {
             ZStack(alignment: .trailing) {
                 TextField(placeholder, text: $text)
+                    .foregroundColor(disabled ? Color(uiColor: .darkGray) : .black)
                     .padding()
                     .padding(.trailing, 20)
                     .disabled(disabled)

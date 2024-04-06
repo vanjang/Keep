@@ -29,7 +29,7 @@ struct DateInputView: InputViewType, View {
             ZStack(alignment: .trailing) {
                 Text(dateString ?? placeholder)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(selectedDate != nil ? .black : Color(uiColor: .placeholderText))
+                    .foregroundColor(getTextColor())
                     .padding()
                     .padding(.trailing, 20)
                     .background(.white)
@@ -94,5 +94,18 @@ struct DateInputView: InputViewType, View {
             }
         }
     }
+    
+    private func getTextColor() -> Color {
+        if disabled {
+            return Color(uiColor: .darkGray)
+        } else {
+            if selectedDate != nil {
+                return .black
+            } else {
+                return Color(uiColor: .placeholderText)
+            }
+        }
+    }
+    
 }
 
