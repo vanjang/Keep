@@ -9,6 +9,9 @@ import SwiftUI
 import Combine
 
 struct CurrentItemView: View {
+    //MARK: - Init
+    private var notifyReload: () -> ()
+    
     //MARK: - environment
     @Environment(\.dismiss) var dismiss
     
@@ -21,7 +24,8 @@ struct CurrentItemView: View {
     @State private var showDeleteAlert = false
     
     /// KeepItem ID
-    init(id: String, itemType: ItemType) {
+    init(id: String, itemType: ItemType, refresh: @escaping () -> ()) {
+        self.notifyReload = refresh
         _viewModel = StateObject(wrappedValue: CurrentItemViewModel(id: id, itemType: itemType, logic: ItemViewModelLogic()))
     }
     
@@ -89,6 +93,9 @@ struct CurrentItemView: View {
                 dismiss()
             }
         }
+        .onDisappear(perform: {
+            notifyReload()
+        })
         .background(Color(uiColor: .mainGray))
     }
     

@@ -40,7 +40,9 @@ struct MainListView: View {
                     .listRowBackground(Color.mainGray)
             }
             .fullScreenCover(item: $selectedItem, content: { item in
-                CurrentItemView(id: item.id, itemType: item.itemType)
+                CurrentItemView(id: item.id, itemType: item.itemType) {
+                    viewModel.fetch.send(())
+                }
             })
             .listStyle(PlainListStyle())
             .background(Color.mainGray)
@@ -62,7 +64,9 @@ struct MainListView: View {
                         .foregroundColor(Color(uiColor: UIColor.systemBlue))
                 }
                 .fullScreenCover(isPresented: $presentAddItemView) {
-                    AddItemView()
+                    AddItemView() {
+                        viewModel.fetch.send(())
+                    }
                 }
                 
                 Button {
@@ -80,6 +84,9 @@ struct MainListView: View {
                 
             }))
         }
+        .onAppear(perform: {
+            viewModel.fetch.send(())
+        })
         .searchable(text: $searchText)
 
     }

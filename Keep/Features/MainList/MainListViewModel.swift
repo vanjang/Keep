@@ -8,7 +8,10 @@
 import Combine
 
 final class MainListViewModel: KeychainContainableViewModel {
+    //MARK: - Input
+    let fetch = PassthroughSubject<Void, Never>()
     
+    //MARK: - Output
     @Published private(set) var items: [MainListItem] = []
     @Published private(set) var error: KeepError = .none
     
@@ -24,7 +27,10 @@ final class MainListViewModel: KeychainContainableViewModel {
     }
        
     private var savedItems: AnyPublisher<[KeepItem], Never> {
-        keychainService.loadData(forKey: keepKey)
+        fetch
+            .flatMap { [unowned self] _ -> AnyPublisher<[KeepItem], KeychainError> in
+                self.keychainService.loadData(forKey: keepKey)
+            }
             .catch { [weak self] error -> AnyPublisher<[KeepItem], Never> in
                 switch error {
                 case .unexpectedError: self?.error = .unexpectedError

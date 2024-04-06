@@ -9,6 +9,9 @@ import SwiftUI
 import Combine
 
 struct AddItemView: View {
+    //MARK: - Init
+    var notifyReload: () -> ()
+    
     //MARK: - environment
     @Environment(\.dismiss) var dismiss
     
@@ -92,6 +95,9 @@ struct AddItemView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 appeared = true
             }
+        }
+        .onDisappear {
+            notifyReload()
         }
         .onReceive(viewModel.$shouldRefresh) { _ in
             refresh.toggle()
