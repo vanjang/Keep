@@ -56,10 +56,11 @@ struct LondNumberInputView: InputViewType, View {
                     Button(action: {
                         text = ""
                     }) {
-                        Image(systemName: "x.circle")
+                        Image(systemName: "xmark")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 17, height: 17)
+                            .frame(width: 14, height: 14)
+                            .padding(4)
                             .foregroundColor(Color(uiColor: .systemBlue))
                     }
                     .padding(.trailing, 12)
