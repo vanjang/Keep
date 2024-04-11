@@ -31,6 +31,7 @@ final class MainListViewModel: KeychainContainableViewModel {
             .flatMap { [unowned self] _ -> AnyPublisher<[KeepItem], KeychainError> in
                 self.keychainService.loadData(forKey: keepKey)
             }
+            .map { $0.sorted { ($0.dateModified ?? $0.dateCreated) > ($1.dateModified ?? $1.dateCreated) } }
             .catch { [weak self] error -> AnyPublisher<[KeepItem], Never> in
                 switch error {
                 case .unexpectedError: self?.error = .unexpectedError
