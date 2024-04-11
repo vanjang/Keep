@@ -20,8 +20,7 @@ struct MainListView: View {
     // MARK: -
     @EnvironmentObject var authManager: AuthManager
 
-    init(searchText: String = "") {
-        self.searchText = searchText
+    init() {
         UISearchBar.appearance().tintColor = .systemBlue
         
         print("###local storage path(for debugging on simulator) : \(String(describing: try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)))")
@@ -38,6 +37,10 @@ struct MainListView: View {
                         selectedItem = item
                     }
                     .listRowBackground(Color.mainGray)
+            }
+            .searchable(text: $searchText)
+            .onChange(of: searchText) { newValue in
+                viewModel.searchText.send(newValue)
             }
             .fullScreenCover(item: $selectedItem, content: { item in
                 CurrentItemView(id: item.id, itemType: item.itemType) {
@@ -87,8 +90,6 @@ struct MainListView: View {
         .onAppear(perform: {
             viewModel.fetch.send(())
         })
-        .searchable(text: $searchText)
-
     }
 }
 
