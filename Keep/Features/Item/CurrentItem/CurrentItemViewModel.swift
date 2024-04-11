@@ -12,6 +12,7 @@ final class CurrentItemViewModel: KeychainContainableViewModel {
     //MARK: - inputs
     let displayType = PassthroughSubject<ItemDisplayType, Never>()
     let deleteButtonTapped = PassthroughSubject<Void, Never>()
+    let fetch = PassthroughSubject<Void, Never>()
     
     //MARK: - outputs
     @Published private(set) var title = ""
@@ -26,7 +27,7 @@ final class CurrentItemViewModel: KeychainContainableViewModel {
     @Published var toEditView = false
     
     //MARK: - Injection
-    private let logic: ItemViewModelLogic
+    private let logic: CurrentItemViewModelLogic
     private let id: String
     private let itemType: ItemType
     
@@ -36,7 +37,7 @@ final class CurrentItemViewModel: KeychainContainableViewModel {
     init(id: String,
          itemType: ItemType,
          keychainService: any KeychainServiceType = KeychainService(serializer: Serializer<[KeepItem]>()),
-         logic: ItemViewModelLogic) {
+         logic: CurrentItemViewModelLogic = CurrentItemViewModelLogic()) {
         self.id = id
         self.itemType = itemType
         self.logic = logic
@@ -111,7 +112,10 @@ final class CurrentItemViewModel: KeychainContainableViewModel {
 
     // MARK: - Keychain operations
     private var savedItems: AnyPublisher<[KeepItem], Never> {
-        keychainService.loadData(forKey: keepKey)
+        fetch
+            .flatMap { [unowned self] _ -> AnyPublisher<[KeepItem], KeychainError> in
+                self.keychainService.loadData(forKey: keepKey)
+            }
             .catch { [weak self] error -> AnyPublisher<[KeepItem], Never> in
                 switch error {
                 case .noItem: return Just([]).eraseToAnyPublisher()

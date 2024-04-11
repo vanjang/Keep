@@ -26,7 +26,7 @@ struct CurrentItemView: View {
     /// KeepItem ID
     init(id: String, itemType: ItemType, refresh: @escaping () -> ()) {
         self.notifyReload = refresh
-        _viewModel = StateObject(wrappedValue: CurrentItemViewModel(id: id, itemType: itemType, logic: ItemViewModelLogic()))
+        _viewModel = StateObject(wrappedValue: CurrentItemViewModel(id: id, itemType: itemType))
     }
     
     var body: some View {
@@ -96,6 +96,9 @@ struct CurrentItemView: View {
         .onDisappear(perform: {
             notifyReload()
         })
+        .onAppear(perform: {
+            viewModel.fetch.send()
+        })
         .background(Color(uiColor: .mainGray))
     }
     
@@ -151,25 +154,30 @@ struct CurrentItemView: View {
     }
     
     private func itemEditView(item: CurrentItem) -> some View {
-        ItemEditView(inputType: item.inputType,
-                     inputSubType: item.itemSubType,
-                     inputField: item.text ?? "",
-                     userInputItem: .constant(nil))
+        ItemEditView(item: ItemEditItem(id: item.id,
+                                        itemType: item.itemType,
+                                        placeholder: item.placeholder,
+                                        inputType: item.inputType,
+                                        subType: item.itemSubType,
+                                        editingText: item.text),
+                     didSave: {
+            viewModel.fetch.send(())
+        })
     }
     
     private func itemCellView(item: CurrentItem) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(item.placeholder)
+            Text(item.itemSubType.rawValue)
                 .padding(.leading, 6)
                 .foregroundColor(Color(uiColor: .lightGray))
                 .font(.system(size: 14, weight: .medium))
             
             inputView(item: item)
-            .frame(minHeight: 50)
+                .frame(minHeight: 50)
         }
     }
     
-    private func getInputViewItem(item: CurrentItem) -> InputViewItem {
+    private func inputViewItem(item: CurrentItem) -> InputViewItem {
         InputViewItem(itemSubType: item.itemSubType,
                       displayType: item.displayType,
                       placeholder: item.placeholder,
@@ -180,10 +188,10 @@ struct CurrentItemView: View {
     
     private func inputView(item: CurrentItem) -> some View {
         switch item.inputType {
-        case .plain: return InputView.plain(getInputViewItem(item: item))
-        case .multiLine: return InputView.multiline(getInputViewItem(item: item))
-        case .longNumber: return InputView.longNumber(getInputViewItem(item: item))
-        case .date: return InputView.date(getInputViewItem(item: item))
+        case .plain: return InputView.plain(inputViewItem(item: item))
+        case .multiLine: return InputView.multiline(inputViewItem(item: item))
+        case .longNumber: return InputView.longNumber(inputViewItem(item: item))
+        case .date: return InputView.date(inputViewItem(item: item))
         }
     }
 }
