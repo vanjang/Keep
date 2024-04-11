@@ -22,12 +22,11 @@ struct DateInputView: InputViewType, View {
     @State var text: String = ""
     @State private var selectedDate: Date? = nil
     @State private var isShowingDatePicker = false
-    @State private var dateString: String? = nil
     
     var body: some View {
         HStack {
             ZStack(alignment: .trailing) {
-                Text(dateString ?? placeholder)
+                Text(text.isEmpty ? placeholder : text)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(getTextColor())
                     .padding()
@@ -44,7 +43,7 @@ struct DateInputView: InputViewType, View {
                     .contextMenu {
                         if canPresentMenu {
                             Button {
-                                UIPasteboard.general.string = dateString
+                                UIPasteboard.general.string = text
                             } label: {
                                 Label("Copy", systemImage: "doc.on.doc")
                             }
@@ -53,9 +52,10 @@ struct DateInputView: InputViewType, View {
                         }
                     }
                 
-                if canDelete && !(dateString ?? "").isEmpty {
+                if canDelete && !text.isEmpty {
                     Button(action: {
                         selectedDate = nil
+                        updateText(date: selectedDate)
                     }) {
                         Image(systemName: "xmark")
                             .resizable()
@@ -67,11 +67,16 @@ struct DateInputView: InputViewType, View {
                     .padding(.trailing, 12)
                 }
             }
-            .onTapGesture {
-                isShowingDatePicker.toggle()
-            }
-            
-            if canEdit {
+            //TODO: blocked for disabled because navigation link and tap gesture are conflicting. Find better way.
+            .if(!disabled, transform: { view in
+                view
+                    .onTapGesture {
+                        isShowingDatePicker.toggle()
+                    }
+
+            })
+
+                if canEdit {
                 Image(systemName: "chevron.right")
                     .resizable()
                     .scaledToFit()
@@ -80,14 +85,11 @@ struct DateInputView: InputViewType, View {
             }
         }
         .onChange(of: selectedDate, perform: { newValue in
-            dateString = selectedDate?.formatted(date: .long, time: .omitted)
-            if let d = selectedDate {
-                print("sss", d.toISOString())
-                inputText(d.toISOString())
-            }
+            updateText(date: newValue)
         })
-        .onChange(of: refresh) { newValue in
-            dateString = nil
+        .onChange(of: refresh) { _ in
+            selectedDate = nil
+            updateText(date: selectedDate)
         }
         .onAppear {
             if let currentText = currentText {
@@ -96,17 +98,13 @@ struct DateInputView: InputViewType, View {
         }
     }
     
-    private func getTextColor() -> Color {
-        if disabled {
-            return Color(uiColor: .darkGray)
-        } else {
-            if selectedDate != nil {
-                return .black
-            } else {
-                return Color(uiColor: .placeholderText)
-            }
-        }
+    private func updateText(date: Date?) {
+        text = date != nil ? date!.formatted(date: .long, time: .omitted) : ""
+        inputText(date != nil ? date!.toISOString() : "")
     }
     
+    private func getTextColor() -> Color {
+        Color(uiColor: text.isEmpty ? .placeholderText : (disabled ? .darkGray : .black))
+    }
 }
 
