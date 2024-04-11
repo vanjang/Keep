@@ -127,4 +127,13 @@ struct CurrentItemViewModelLogic {
         default: return ""
         }
     }
+    
+    func removeKeepItem(for id: String, keepItems: [KeepItem]) -> [KeepItem] {
+        if let index = keepItems.firstIndex(where: { $0.id == id }) {
+            var items = keepItems
+            items.remove(at: index)
+            return items
+        }
+        return keepItems
+    }
 }

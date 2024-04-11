@@ -79,7 +79,7 @@ final class CurrentItemViewModel: KeychainContainableViewModel {
     }
     
     private func bindCurrentInfoItem() {
-        savedItems
+        savedKeepItems
             .map { [unowned self] keepItems in
                 self.logic.getCurrentInfoItem(from: keepItems, keepItemId: self.id)
             }
@@ -88,12 +88,19 @@ final class CurrentItemViewModel: KeychainContainableViewModel {
     }
     
     private func bindCurrentItems() {
-        Publishers.CombineLatest(savedItems, displayType)
+        Publishers.CombineLatest(savedKeepItems, displayType)
             .map { [unowned self] keepItems, displayType in
                 self.logic.getCurrentItems(from: keepItems, keepItemId: self.id, displayType: displayType)
             }
             .assignNoRetain(to: \.items, on: self)
             .store(in: &cancellables)
+    }
+    
+    private var currentKeepItem: AnyPublisher<KeepItem, Never> {
+        savedKeepItems
+            .map { [unowned self] items in (items, self.id)}
+            .compactMap(logic.getKeepItem)
+            .eraseToAnyPublisher()
     }
     
     private func bindBarButtonActionType() {
@@ -111,7 +118,7 @@ final class CurrentItemViewModel: KeychainContainableViewModel {
     }
 
     // MARK: - Keychain operations
-    private var savedItems: AnyPublisher<[KeepItem], Never> {
+    private var savedKeepItems: AnyPublisher<[KeepItem], Never> {
         fetch
             .flatMap { [unowned self] _ -> AnyPublisher<[KeepItem], KeychainError> in
                 self.keychainService.loadData(forKey: keepKey)
@@ -128,10 +135,18 @@ final class CurrentItemViewModel: KeychainContainableViewModel {
     
     private func bindDeleteItem() {
         deleteButtonTapped
-            .filter(if: displayType.map { $0 == .current })
-            .sink { items in
-                print("삭제")
+            .withLatestFrom(savedKeepItems)
+            .map { [unowned self] e in (self.id, e.1)}
+            .map(logic.removeKeepItem)
+            .flatMap { [unowned self] items in
+                self.keychainService.update(items, forKey: keepKey)
             }
+            .catch { [weak self] error -> AnyPublisher<Void, Never> in
+                self?.error = .keychainError(error)
+                return .empty()
+            }
+            .map { _ in true }
+            .assignNoRetain(to: \.shouldDismiss, on: self)
             .store(in: &cancellables)
     }
     
