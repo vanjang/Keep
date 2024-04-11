@@ -16,7 +16,7 @@ struct AddItemView: View {
     @Environment(\.dismiss) var dismiss
     
     //MARK: - viewModel
-    @StateObject private var viewModel = AddItemViewModel(logic: ItemViewModelLogic())
+    @StateObject private var viewModel = AddItemViewModel()
     
     //MARK: - states
     @State private var presentActionSheet = false

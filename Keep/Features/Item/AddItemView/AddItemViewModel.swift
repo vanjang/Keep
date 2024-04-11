@@ -23,12 +23,12 @@ final class AddItemViewModel: KeychainContainableViewModel {
     @Published private(set) var error: KeepError = .none
     
     //MARK: - Injection
-    private let logic: ItemViewModelLogic
+    private let logic: AddItemViewModelLogic
     
     //MARK: -
     private var cancellables = Set<AnyCancellable>()
 
-    init(keychainService: any KeychainServiceType = KeychainService(serializer: Serializer<[KeepItem]>()), logic: ItemViewModelLogic) {
+    init(keychainService: any KeychainServiceType = KeychainService(serializer: Serializer<[KeepItem]>()), logic: AddItemViewModelLogic = AddItemViewModelLogic()) {
         self.logic = logic
         super.init(keychainService: keychainService)
         setupBindings()
