@@ -28,7 +28,6 @@
 		A351711C2BB495AF00A24D19 /* OffsetAdjustableModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351711B2BB495AF00A24D19 /* OffsetAdjustableModifier.swift */; };
 		A351711E2BB497D300A24D19 /* KeychainContainableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351711D2BB497D300A24D19 /* KeychainContainableViewModel.swift */; };
 		A35171202BB4982500A24D19 /* KeychainServiceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351711F2BB4982500A24D19 /* KeychainServiceType.swift */; };
-		A35171222BB4C92D00A24D19 /* ItemViewModelLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171212BB4C92D00A24D19 /* ItemViewModelLogic.swift */; };
 		A35171262BB5785000A24D19 /* ItemViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171252BB5785000A24D19 /* ItemViewModelTests.swift */; };
 		A35171292BB5AE2600A24D19 /* CurrentItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35171282BB5AE2600A24D19 /* CurrentItemView.swift */; };
 		A351712B2BB5AE3300A24D19 /* CurrentItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A351712A2BB5AE3300A24D19 /* CurrentItemViewModel.swift */; };
@@ -66,6 +65,11 @@
 		A3B8B5A62BC05531001BBAF4 /* DateInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B8B5A52BC05531001BBAF4 /* DateInputView.swift */; };
 		A3B8B5A82BC08673001BBAF4 /* Toast.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B8B5A72BC08673001BBAF4 /* Toast.swift */; };
 		A3B8B5AA2BC0AE75001BBAF4 /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B8B5A92BC0AE75001BBAF4 /* String+Extension.swift */; };
+		A3B8B5AC2BC5FEAE001BBAF4 /* ItemEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B8B5AB2BC5FEAE001BBAF4 /* ItemEditViewModel.swift */; };
+		A3B8B5AE2BC60156001BBAF4 /* ItemEditItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B8B5AD2BC60156001BBAF4 /* ItemEditItem.swift */; };
+		A3B8B5B12BC86BB4001BBAF4 /* ItemEditViewModelLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B8B5B02BC86BB4001BBAF4 /* ItemEditViewModelLogic.swift */; };
+		A3B8B5B32BC86BF7001BBAF4 /* CurrentItemViewModelLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B8B5B22BC86BF7001BBAF4 /* CurrentItemViewModelLogic.swift */; };
+		A3B8B5B52BC86C1B001BBAF4 /* AddItemViewModelLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B8B5B42BC86C1B001BBAF4 /* AddItemViewModelLogic.swift */; };
 		A3CD40372B86A53D00CB3F25 /* AddItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CD40362B86A53D00CB3F25 /* AddItemView.swift */; };
 		A3CD403B2B86D06600CB3F25 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CD403A2B86D06600CB3F25 /* SettingsView.swift */; };
 		A3CD403F2B87F5BC00CB3F25 /* ItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CD403E2B87F5BC00CB3F25 /* ItemType.swift */; };
@@ -125,7 +129,6 @@
 		A351711B2BB495AF00A24D19 /* OffsetAdjustableModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OffsetAdjustableModifier.swift; sourceTree = "<group>"; };
 		A351711D2BB497D300A24D19 /* KeychainContainableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainContainableViewModel.swift; sourceTree = "<group>"; };
 		A351711F2BB4982500A24D19 /* KeychainServiceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainServiceType.swift; sourceTree = "<group>"; };
-		A35171212BB4C92D00A24D19 /* ItemViewModelLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemViewModelLogic.swift; sourceTree = "<group>"; };
 		A35171252BB5785000A24D19 /* ItemViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemViewModelTests.swift; sourceTree = "<group>"; };
 		A35171282BB5AE2600A24D19 /* CurrentItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentItemView.swift; sourceTree = "<group>"; };
 		A351712A2BB5AE3300A24D19 /* CurrentItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentItemViewModel.swift; sourceTree = "<group>"; };
@@ -163,6 +166,11 @@
 		A3B8B5A52BC05531001BBAF4 /* DateInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateInputView.swift; sourceTree = "<group>"; };
 		A3B8B5A72BC08673001BBAF4 /* Toast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Toast.swift; sourceTree = "<group>"; };
 		A3B8B5A92BC0AE75001BBAF4 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		A3B8B5AB2BC5FEAE001BBAF4 /* ItemEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewModel.swift; sourceTree = "<group>"; };
+		A3B8B5AD2BC60156001BBAF4 /* ItemEditItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditItem.swift; sourceTree = "<group>"; };
+		A3B8B5B02BC86BB4001BBAF4 /* ItemEditViewModelLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditViewModelLogic.swift; sourceTree = "<group>"; };
+		A3B8B5B22BC86BF7001BBAF4 /* CurrentItemViewModelLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentItemViewModelLogic.swift; sourceTree = "<group>"; };
+		A3B8B5B42BC86C1B001BBAF4 /* AddItemViewModelLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemViewModelLogic.swift; sourceTree = "<group>"; };
 		A3CD40362B86A53D00CB3F25 /* AddItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemView.swift; sourceTree = "<group>"; };
 		A3CD403A2B86D06600CB3F25 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A3CD403E2B87F5BC00CB3F25 /* ItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemType.swift; sourceTree = "<group>"; };
@@ -277,6 +285,7 @@
 		A35171272BB5AE0300A24D19 /* CurrentItem */ = {
 			isa = PBXGroup;
 			children = (
+				A3B8B5B22BC86BF7001BBAF4 /* CurrentItemViewModelLogic.swift */,
 				A35171282BB5AE2600A24D19 /* CurrentItemView.swift */,
 				A351712A2BB5AE3300A24D19 /* CurrentItemViewModel.swift */,
 				A351712C2BB5C4A800A24D19 /* CurrentItem.swift */,
@@ -308,7 +317,10 @@
 		A387CBAC2BADE86000E6231E /* ItemEdit */ = {
 			isa = PBXGroup;
 			children = (
+				A3B8B5B02BC86BB4001BBAF4 /* ItemEditViewModelLogic.swift */,
 				A387CBAF2BADE8AC00E6231E /* ItemEditView.swift */,
+				A3B8B5AB2BC5FEAE001BBAF4 /* ItemEditViewModel.swift */,
+				A3B8B5AD2BC60156001BBAF4 /* ItemEditItem.swift */,
 			);
 			path = ItemEdit;
 			sourceTree = "<group>";
@@ -316,6 +328,7 @@
 		A387CBAE2BADE88E00E6231E /* AddItemView */ = {
 			isa = PBXGroup;
 			children = (
+				A3B8B5B42BC86C1B001BBAF4 /* AddItemViewModelLogic.swift */,
 				A3CD40362B86A53D00CB3F25 /* AddItemView.swift */,
 				A368B0EC2BA26D8900AEBC15 /* AddItemViewModel.swift */,
 				A368B0EE2BA3065500AEBC15 /* AddItem.swift */,
@@ -375,7 +388,6 @@
 		A3CD40352B86A52900CB3F25 /* Item */ = {
 			isa = PBXGroup;
 			children = (
-				A35171212BB4C92D00A24D19 /* ItemViewModelLogic.swift */,
 				A351710A2BB367D200A24D19 /* Model */,
 				A35171272BB5AE0300A24D19 /* CurrentItem */,
 				A387CBAE2BADE88E00E6231E /* AddItemView */,
@@ -610,10 +622,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A35171222BB4C92D00A24D19 /* ItemViewModelLogic.swift in Sources */,
 				A351713B2BB7835F00A24D19 /* RoundedCorners.swift in Sources */,
 				A35171292BB5AE2600A24D19 /* CurrentItemView.swift in Sources */,
 				A35171142BB3683900A24D19 /* Etc.swift in Sources */,
+				A3B8B5B32BC86BF7001BBAF4 /* CurrentItemViewModelLogic.swift in Sources */,
 				A3CD40482B890D7100CB3F25 /* UIApplication+Extension.swift in Sources */,
 				A35171072BB33AE400A24D19 /* Helpers.swift in Sources */,
 				A387CBC32BB0EAA000E6231E /* Serializer.swift in Sources */,
@@ -624,6 +636,7 @@
 				A35171312BB61AA400A24D19 /* DateFormatter+Extension.swift in Sources */,
 				A387CBBC2BAF9DC700E6231E /* UserInputItem.swift in Sources */,
 				A35171372BB7671800A24D19 /* CurrentInfoItem.swift in Sources */,
+				A3B8B5B12BC86BB4001BBAF4 /* ItemEditViewModelLogic.swift in Sources */,
 				A3CD40442B890CF100CB3F25 /* BounceBehavior.swift in Sources */,
 				A3CD40372B86A53D00CB3F25 /* AddItemView.swift in Sources */,
 				A3B8B59B2BC054AD001BBAF4 /* InputViewItem.swift in Sources */,
@@ -635,6 +648,7 @@
 				A3B8B5982BC05467001BBAF4 /* InputView.swift in Sources */,
 				A35171042BB1CBA000A24D19 /* ItemBarButtonActionType.swift in Sources */,
 				A368B0EF2BA3065500AEBC15 /* AddItem.swift in Sources */,
+				A3B8B5AE2BC60156001BBAF4 /* ItemEditItem.swift in Sources */,
 				A368B0ED2BA26D8900AEBC15 /* AddItemViewModel.swift in Sources */,
 				A35171162BB3814F00A24D19 /* KeychainError.swift in Sources */,
 				A3CD40412B87F69700CB3F25 /* ItemInputType.swift in Sources */,
@@ -648,6 +662,7 @@
 				A35171352BB61AEB00A24D19 /* Locale+Extension.swift in Sources */,
 				A387CBB42BAE8AE800E6231E /* View+Extension.swift in Sources */,
 				A387CBB02BADE8AC00E6231E /* ItemEditView.swift in Sources */,
+				A3B8B5B52BC86C1B001BBAF4 /* AddItemViewModelLogic.swift in Sources */,
 				A3DA1D142B8561DF00B821DA /* Color+Extension.swift in Sources */,
 				A351712D2BB5C4A800A24D19 /* CurrentItem.swift in Sources */,
 				A3B8B5A22BC0550E001BBAF4 /* MultilineInputView.swift in Sources */,
@@ -657,6 +672,7 @@
 				A387CBC12BB0EA9400E6231E /* SerializeType.swift in Sources */,
 				A35171392BB7828C00A24D19 /* BottomSheetView.swift in Sources */,
 				A3B8B5A62BC05531001BBAF4 /* DateInputView.swift in Sources */,
+				A3B8B5AC2BC5FEAE001BBAF4 /* ItemEditViewModel.swift in Sources */,
 				A3DA1D112B855F8F00B821DA /* MainRowView.swift in Sources */,
 				A35171122BB3683100A24D19 /* Card.swift in Sources */,
 				A3B8B59D2BC054BA001BBAF4 /* InputViewType.swift in Sources */,

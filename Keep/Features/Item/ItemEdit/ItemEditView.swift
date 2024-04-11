@@ -9,10 +9,18 @@ import SwiftUI
 
 struct ItemEditView: View {
     // MARK: - init
-    let inputType: ItemInputType
-    let inputSubType: ItemSubType
-    let inputField: String
-    @Binding var userInputItem: UserInputItem?
+    var didSave: () -> ()
+    
+    //MARK: - viewModel
+    @StateObject private var viewModel: ItemEditViewModel
+    
+    //MARK: - States
+    @State var showAlert = false
+    
+    init(item: ItemEditItem, didSave: @escaping () -> ()) {
+        _viewModel = StateObject(wrappedValue: ItemEditViewModel(item: item))
+        self.didSave = didSave
+    }
     
     // MARK: - environments
     @Environment(\.dismiss) var dismiss
@@ -23,21 +31,20 @@ struct ItemEditView: View {
     
     var body: some View {
         VStack {
-            itemDetailView()
-            .frame(minHeight: 50)
-            .padding()
-            .focused($focused, equals: true)
-            .navigationBarTitle("Edit " + inputSubType.rawValue)
-            .navigationBarItems(
-                trailing:
-                    Button(action: {
-                        print("save button tapped")
-                    }) {
-                        Text("Save")
-                            .foregroundColor(Color(uiColor: .systemBlue))
-                            .disabled(false)
-                    }
-            )
+            itemDetailView(viewModel.inputType)
+                .frame(minHeight: 50)
+                .padding()
+                .focused($focused, equals: true)
+                .navigationBarTitle("Edit " + viewModel.itemSubType.rawValue)
+                .navigationBarItems(
+                    trailing:
+                        Button(action: {
+                            viewModel.saveButtonTapped.send(())
+                        }) {
+                            Text("Save")
+                        }
+                        .disabled(!viewModel.saveButtonEnabled)
+                )
             
             Spacer()
         }
@@ -50,20 +57,34 @@ struct ItemEditView: View {
                 self.focused = true
             }
         }
+        .onReceive(viewModel.$shouldPop) { shouldPop in
+            if shouldPop {
+                didSave()
+                dismiss()
+            }
+        }
+        .onReceive(viewModel.$showAlertForEmptyString, perform: { show in
+            if show {
+                showAlert.toggle()
+            }
+        })
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Can't save"), message: Text("This field is required"), dismissButton: .default(Text("Dismiss")))
+        }
     }
     
     private func inputViewItem() -> InputViewItem {
         InputViewItem(itemSubType: .none,
                       displayType: .add,
-                      placeholder: "",
-                      currentText: inputField,
+                      placeholder: viewModel.placedholder,
+                      currentText: viewModel.editingText,
                       refresh: .constant(false),
                       inputText: { inputText in
-            
+            viewModel.editedInputItem.send(UserInputItem(itemSubType: viewModel.itemSubType, text: inputText))
         })
     }
     
-    private func itemDetailView() -> some View {
+    private func itemDetailView(_ inputType: ItemInputType) -> some View {
         switch inputType {
         case .plain: return InputView.plain(inputViewItem())
         case .multiLine: return InputView.multiline(inputViewItem())
