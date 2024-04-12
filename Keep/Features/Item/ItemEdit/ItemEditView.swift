@@ -8,61 +8,88 @@
 import SwiftUI
 
 struct ItemEditView: View {
-    // init
-    let inputType: ItemInputType
-    let inputField: String
-    @Binding var userInputItem: UserInputItem?
-
-    // environments
+    // MARK: - init
+    var didSave: () -> ()
+    
+    //MARK: - viewModel
+    @StateObject private var viewModel: ItemEditViewModel
+    
+    //MARK: - States
+    @State var showAlert = false
+    
+    init(item: ItemEditItem, didSave: @escaping () -> ()) {
+        _viewModel = StateObject(wrappedValue: ItemEditViewModel(item: item))
+        self.didSave = didSave
+    }
+    
+    // MARK: - environments
     @Environment(\.dismiss) var dismiss
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-
-    // states
+    
+    // MARK: - states
     @FocusState private var focused: Bool?
     
     var body: some View {
         VStack {
-            ItemInputView(itemSubType: .none,
-                          inputType: inputType,
-                          displayType: .add,
-                          placeholder: "",
-                          refresh: .constant(false),
-                          editButtonTap: .constant(""),
-                          userInputItem: $userInputItem)
+            itemDetailView(viewModel.inputType)
                 .frame(minHeight: 50)
                 .padding()
                 .focused($focused, equals: true)
-                .navigationBarBackButtonHidden()
-                .navigationBarTitle("Edit " + inputField)
+                .navigationBarTitle("Edit " + viewModel.itemSubType.rawValue)
                 .navigationBarItems(
-                    leading:
-                        Button(action: {
-                            dismiss()
-                        }) {
-                            Image(systemName: "chevron.left")
-                                .foregroundColor(Color(uiColor: .systemBlue))
-                        },
                     trailing:
                         Button(action: {
-                            print("save button tapped")
+                            viewModel.saveButtonTapped.send(())
                         }) {
                             Text("Save")
-                                .foregroundColor(Color(uiColor: .systemBlue))
-                                .disabled(false)
                         }
+                        .disabled(!viewModel.saveButtonEnabled)
                 )
-               
+            
             Spacer()
         }
         .background(Color.mainGray)
         .onTapGesture {
             UIApplication.shared.endEditing()
         }
-        .manualPopBack()
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.focused = true
             }
+        }
+        .onReceive(viewModel.$shouldPop) { shouldPop in
+            if shouldPop {
+                didSave()
+                dismiss()
+            }
+        }
+        .onReceive(viewModel.$showAlertForEmptyString, perform: { show in
+            if show {
+                showAlert.toggle()
+            }
+        })
+        .alert(isPresented: $showAlert) {
+            Alert(title: Text("Can't save"), message: Text("This field is required"), dismissButton: .default(Text("Dismiss")))
+        }
+    }
+    
+    private func inputViewItem() -> InputViewItem {
+        InputViewItem(itemSubType: .none,
+                      displayType: .add,
+                      placeholder: viewModel.placedholder,
+                      currentText: viewModel.editingText,
+                      refresh: .constant(false),
+                      inputText: { inputText in
+            viewModel.editedInputItem.send(UserInputItem(itemSubType: viewModel.itemSubType, text: inputText))
+        })
+    }
+    
+    private func itemDetailView(_ inputType: ItemInputType) -> some View {
+        switch inputType {
+        case .plain: return InputView.plain(inputViewItem())
+        case .multiLine: return InputView.multiline(inputViewItem())
+        case .longNumber: return InputView.longNumber(inputViewItem())
+        case .date: return InputView.date(inputViewItem())
         }
     }
 }

@@ -8,13 +8,20 @@
 import Combine
 
 final class MainListViewModel: KeychainContainableViewModel {
+    //MARK: - Input
+    let fetch = PassthroughSubject<Void, Never>()
+    let searchText = CurrentValueSubject<String, Never>("")
     
+    //MARK: - Output
     @Published private(set) var items: [MainListItem] = []
     @Published private(set) var error: KeepError = .none
     
     private var cancellables = Set<AnyCancellable>()
+    private let logic: MainListViewModelLogic
     
-    override init(keychainService: any KeychainServiceType = KeychainService(serializer: Serializer<[KeepItem]>())) {
+    init(keychainService: any KeychainServiceType = KeychainService(serializer: Serializer<[KeepItem]>()),
+         logic: MainListViewModelLogic = MainListViewModelLogic()) {
+        self.logic = logic
         super.init(keychainService: keychainService)
         setupBindings()
     }
@@ -23,8 +30,12 @@ final class MainListViewModel: KeychainContainableViewModel {
         bindItems()
     }
        
-    private var savedItems: AnyPublisher<[KeepItem], Never> {
-        keychainService.loadData(forKey: keepKey)
+    private var savedKeepItems: AnyPublisher<[KeepItem], Never> {
+        fetch
+            .flatMap { [unowned self] _ -> AnyPublisher<[KeepItem], KeychainError> in
+                self.keychainService.loadData(forKey: keepKey)
+            }
+            .map { $0.sorted { ($0.dateModified ?? $0.dateCreated) > ($1.dateModified ?? $1.dateCreated) } }
             .catch { [weak self] error -> AnyPublisher<[KeepItem], Never> in
                 switch error {
                 case .unexpectedError: self?.error = .unexpectedError
@@ -38,21 +49,8 @@ final class MainListViewModel: KeychainContainableViewModel {
     }
     
     private func bindItems() {
-        savedItems
-            .map {
-                $0.map { keepItem -> MainListItem in
-                    switch keepItem {
-                    case .password(let pw):
-                        return MainListItem(title: pw.title)
-                    case .card(let card):
-                        return MainListItem(title: card.title)
-                    case .bankAccount(let account):
-                        return MainListItem(title: account.title)
-                    case .etc(let etc):
-                        return MainListItem(title: etc.title)
-                    }
-                }
-            }
+        Publishers.CombineLatest(savedKeepItems, searchText)
+            .map(logic.getMainLilstItems)
             .assign(to: \.items, on: self)
             .store(in: &cancellables)
     }

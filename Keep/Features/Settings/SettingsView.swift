@@ -11,7 +11,6 @@ struct SettingsView: View {
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
-        GeometryReader { geometry in
             List {
                 Section(header: Text("Authentication")) {
                     Text("Face ID")
@@ -31,25 +30,7 @@ struct SettingsView: View {
 
             }
             .listStyle(PlainListStyle())
-            .padding(.top, geometry.safeAreaInsets.top)
             .background(Color.mainGray)
-            .navigationBarBackButtonHidden(true)
-            .manualPopBack()
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("Settings")
-                }
-                
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.backward")
-                    }
-                    .accentColor(.pink)
-                }
-            }
-        }
     }
 }
 

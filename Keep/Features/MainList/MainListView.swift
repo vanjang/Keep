@@ -8,27 +8,26 @@
 import SwiftUI
 
 struct MainListView: View {
-    // viewModel
+    // MARK: - viewModel
     @StateObject private var viewModel = MainListViewModel()
     
-    // states
+    // MARK: - states
     @State private var selectedItem: MainListItem?
     @State private var presentAddItemView = false
     @State private var presentSettingsView = false
     @State private var searchText = ""
     
-    //
+    // MARK: -
     @EnvironmentObject var authManager: AuthManager
 
-    init(searchText: String = "") {
-        self.searchText = searchText
+    init() {
         UISearchBar.appearance().tintColor = .systemBlue
         
         print("###local storage path(for debugging on simulator) : \(String(describing: try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)))")
     }
     
     var body: some View {
-        TransparenNavigationView {
+        NavigationView {
             List(viewModel.items, id: \.self) { item in
                 MainRowView(title: item.title)
                     .listRowSeparator(.hidden)
@@ -39,8 +38,14 @@ struct MainListView: View {
                     }
                     .listRowBackground(Color.mainGray)
             }
+            .searchable(text: $searchText)
+            .onChange(of: searchText) { newValue in
+                viewModel.searchText.send(newValue)
+            }
             .fullScreenCover(item: $selectedItem, content: { item in
-                ItemView(displayType: .current)
+                CurrentItemView(id: item.id, itemType: item.itemType) {
+                    viewModel.fetch.send(())
+                }
             })
             .listStyle(PlainListStyle())
             .background(Color.mainGray)
@@ -62,7 +67,9 @@ struct MainListView: View {
                         .foregroundColor(Color(uiColor: UIColor.systemBlue))
                 }
                 .fullScreenCover(isPresented: $presentAddItemView) {
-                    ItemView(displayType: .add)
+                    AddItemView() {
+                        viewModel.fetch.send(())
+                    }
                 }
                 
                 Button {
@@ -80,8 +87,9 @@ struct MainListView: View {
                 
             }))
         }
-        .searchable(text: $searchText)
-
+        .onAppear(perform: {
+            viewModel.fetch.send(())
+        })
     }
 }
 

@@ -15,6 +15,6 @@ struct Card: Codable {
     let dateEndingBy: String?
     let securityCode: String?
     let memo: String?
-    let dateCreated: String
-    let dateModified: String?
+    let dateCreated: Date
+    let dateModified: Date?
 }

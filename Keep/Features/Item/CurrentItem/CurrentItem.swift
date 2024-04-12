@@ -1,16 +1,19 @@
 //
-//  ItemInputItem.swift
+//  CurrentItem.swift
 //  Keep
 //
-//  Created by myung hoon on 14/03/2024.
+//  Created by myung hoon on 28/03/2024.
 //
 
 import Foundation
 
-struct ItemInputItem: Hashable {
+struct CurrentItem: Hashable {
+    let id: String
+    let itemType: ItemType
     let itemSubType: ItemSubType
     let inputType: ItemInputType
     let displayType: ItemDisplayType
+    let text: String?
     let placeholder: String
     let isOptional: Bool
 }

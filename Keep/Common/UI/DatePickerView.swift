@@ -23,6 +23,9 @@ struct DatePickerView: View {
                     .padding()
                 
                 Button("Done") {
+                    if selectedDate == nil {
+                        selectedDate = Date()
+                    }
                     isPresented.toggle()
                 }
             }
