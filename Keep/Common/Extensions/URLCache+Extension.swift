@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+extension URLCache {
+    static func configSharedCache(memory: Int, disk: Int) {
+        let cache = URLCache(memoryCapacity: memory, diskCapacity: disk, diskPath: "apodApiCache")
+        URLCache.shared = cache
+    }
+}
