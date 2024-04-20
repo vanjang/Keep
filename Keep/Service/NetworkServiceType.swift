@@ -12,3 +12,7 @@ import Combine
 protocol NetworkServiceType {
     func request<T: Decodable>(_ endpoint: Endpoint) -> AnyPublisher<T, Error>
 }
+
+class TestClass {
+    
+}
